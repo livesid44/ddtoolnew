@@ -6,7 +6,9 @@
     <meta name="description" content="BPO Process Discovery Platform - Dashboard">
     <title>Dashboard - BPO AI Platform</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="bootstrap-icons.css">
     <link rel="stylesheet" href="bpo-platform.css">
+    <link rel="stylesheet" href="professional-enhancements.css">
 </head>
 <body class="dashboard-page">
     <!-- Header with Navigation -->
@@ -35,28 +37,28 @@
         <!-- Sidebar -->
         <aside class="platform-sidebar" id="platformSidebar">
             <div class="sidebar-toggle" onclick="toggleSidebar()" style="cursor: pointer; padding: 10px 15px; color: #fff; text-align: center;">
-                <span style="font-size: 1.5rem;">☰</span>
+                <span style="font-size: 1.5rem;"><i class="bi bi-list"></i></span>
             </div>
             <h3>Quick Links</h3>
             <nav class="sidebar-nav">
                 <a href="workflow.html" class="sidebar-link">
-                    <span class="icon">📋</span>
+                    <span class="icon"><i class="bi bi-diagram-3"></i></span>
                     <span>Workflow Engine</span>
                 </a>
                 <a href="upload.html" class="sidebar-link">
-                    <span class="icon">📤</span>
+                    <span class="icon"><i class="bi bi-cloud-upload"></i></span>
                     <span>Upload Files</span>
                 </a>
                 <a href="analysis.html" class="sidebar-link">
-                    <span class="icon">🤖</span>
+                    <span class="icon"><i class="bi bi-cpu"></i></span>
                     <span>AI Analysis</span>
                 </a>
                 <a href="kanban.html" class="sidebar-link">
-                    <span class="icon">📊</span>
+                    <span class="icon"><i class="bi bi-kanban"></i></span>
                     <span>Kanban Board</span>
                 </a>
                 <a href="admin.html" class="sidebar-link">
-                    <span class="icon">⚙️</span>
+                    <span class="icon"><i class="bi bi-gear"></i></span>
                     <span>Admin Config</span>
                 </a>
             </nav>
@@ -72,7 +74,7 @@
             <!-- KPI Cards -->
             <section class="kpi-section">
                 <div class="kpi-card">
-                    <div class="kpi-icon">📊</div>
+                    <div class="kpi-icon"><i class="bi bi-graph-up"></i></div>
                     <div class="kpi-content">
                         <h3>Processes Discovered</h3>
                         <div class="kpi-value">247</div>
@@ -81,7 +83,7 @@
                 </div>
                 
                 <div class="kpi-card">
-                    <div class="kpi-icon">⏳</div>
+                    <div class="kpi-icon"><i class="bi bi-hourglass-split"></i></div>
                     <div class="kpi-content">
                         <h3>Pending Reviews</h3>
                         <div class="kpi-value">32</div>
@@ -90,7 +92,7 @@
                 </div>
                 
                 <div class="kpi-card">
-                    <div class="kpi-icon">✅</div>
+                    <div class="kpi-icon"><i class="bi bi-shield-check"></i></div>
                     <div class="kpi-content">
                         <h3>Compliance Status</h3>
                         <div class="kpi-value">94%</div>
@@ -99,7 +101,7 @@
                 </div>
                 
                 <div class="kpi-card">
-                    <div class="kpi-icon">🎯</div>
+                    <div class="kpi-icon"><i class="bi bi-lightning"></i></div>
                     <div class="kpi-content">
                         <h3>Automation Rate</h3>
                         <div class="kpi-value">78%</div>
@@ -206,7 +208,7 @@
                     </div>
                     <div class="notifications-list">
                         <div class="notification-item new">
-                            <div class="notification-icon">🔔</div>
+                            <div class="notification-icon"><i class="bi bi-bell"></i></div>
                             <div class="notification-content">
                                 <h4>New Process Discovered</h4>
                                 <p>Customer Service Call Handling process has been analyzed</p>
@@ -214,7 +216,7 @@
                             </div>
                         </div>
                         <div class="notification-item">
-                            <div class="notification-icon">⚠️</div>
+                            <div class="notification-icon"><i class="bi bi-exclamation-triangle"></i></div>
                             <div class="notification-content">
                                 <h4>Review Required</h4>
                                 <p>3 processes pending leadership approval</p>
@@ -222,7 +224,7 @@
                             </div>
                         </div>
                         <div class="notification-item">
-                            <div class="notification-icon">✅</div>
+                            <div class="notification-icon"><i class="bi bi-check-circle"></i></div>
                             <div class="notification-content">
                                 <h4>Compliance Check Complete</h4>
                                 <p>All processes passed latest compliance audit</p>
@@ -230,7 +232,7 @@
                             </div>
                         </div>
                         <div class="notification-item">
-                            <div class="notification-icon">📤</div>
+                            <div class="notification-icon"><i class="bi bi-upload"></i></div>
                             <div class="notification-content">
                                 <h4>Files Uploaded</h4>
                                 <p>12 new artifacts uploaded for review</p>
