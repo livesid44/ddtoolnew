@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="BPO Process Discovery Platform - Kanban Board">
+    <title>Kanban Board - BPO AI Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="bpo-platform.css">
+</head>
+<body class="kanban-page">
+    <!-- Header with Navigation -->
+    <header class="platform-header">
+        <div class="header-container">
+            <div class="logo">
+                <h1>BPO AI Platform</h1>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="dashboard.html">Home</a></li>
+                    <li><a href="workflow.html">Workflow</a></li>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="admin.html">Admin</a></li>
+                    <li><a href="#settings">Settings</a></li>
+                </ul>
+            </nav>
+            <div class="user-menu">
+                <span class="user-name">John Doe</span>
+                <a href="login.html" class="btn btn-sm">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="platform-layout">
+        <!-- Sidebar -->
+        <aside class="platform-sidebar">
+            <h3>Quick Links</h3>
+            <nav class="sidebar-nav">
+                <a href="workflow.html" class="sidebar-link">
+                    <span class="icon">📋</span>
+                    <span>Workflow Engine</span>
+                </a>
+                <a href="upload.html" class="sidebar-link">
+                    <span class="icon">📤</span>
+                    <span>Upload Files</span>
+                </a>
+                <a href="analysis.html" class="sidebar-link">
+                    <span class="icon">🤖</span>
+                    <span>AI Analysis</span>
+                </a>
+                <a href="kanban.html" class="sidebar-link active">
+                    <span class="icon">📊</span>
+                    <span>Kanban Board</span>
+                </a>
+                <a href="admin.html" class="sidebar-link">
+                    <span class="icon">⚙️</span>
+                    <span>Admin Config</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="platform-main kanban-main">
+            <div class="page-header">
+                <h1>Kanban Board - Task & Module Tracking</h1>
+                <div class="kanban-controls">
+                    <select class="filter-select">
+                        <option>All Projects</option>
+                        <option>Customer Service</option>
+                        <option>HR Processes</option>
+                        <option>Finance Workflows</option>
+                    </select>
+                    <button class="btn btn-primary">+ Add Task</button>
+                </div>
+            </div>
+
+            <!-- Kanban Board -->
+            <section class="kanban-board">
+                <!-- To Do Column -->
+                <div class="kanban-column" data-status="todo">
+                    <div class="column-header">
+                        <h3>📝 To Do</h3>
+                        <span class="task-count">5</span>
+                    </div>
+                    <div class="column-body">
+                        <div class="kanban-card" draggable="true">
+                            <div class="card-header">
+                                <span class="card-priority high">High</span>
+                                <span class="card-id">#1024</span>
+                            </div>
+                            <h4>Invoice Processing Documentation</h4>
+                            <p>Create comprehensive documentation for the invoice processing workflow</p>
+                            <div class="card-tags">
+                                <span class="tag">Documentation</span>
+                                <span class="tag">Finance</span>
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-assignee">
+                                    <span class="avatar">JD</span>
+                                    <span>John Doe</span>
+                                </div>
+                                <span class="card-date">Due: Feb 25</span>
+                            </div>
+                        </div>
+
+                        <div class="kanban-card" draggable="true">
+                            <div class="card-header">
+                                <span class="card-priority medium">Medium</span>
+                                <span class="card-id">#1025</span>
+                            </div>
+                            <h4>Collect Training Videos</h4>
+                            <p>Gather all training videos for customer service processes</p>
+                            <div class="card-tags">
+                                <span class="tag">Artifact Upload</span>
+                                <span class="tag">Customer Service</span>
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-assignee">
+                                    <span class="avatar">JS</span>
+                                    <span>Jane Smith</span>
+                                </div>
+                                <span class="card-date">Due: Feb 28</span>
+                            </div>
+                        </div>
+
+                        <div class="kanban-card" draggable="true">
+                            <div class="card-header">
+                                <span class="card-priority low">Low</span>
+                                <span class="card-id">#1026</span>
+                            </div>
+                            <h4>Update Compliance Checklist</h4>
+                            <p>Review and update compliance requirements for Q1</p>
+                            <div class="card-tags">
+                                <span class="tag">Compliance</span>
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-assignee">
+                                    <span class="avatar">BJ</span>
+                                    <span>Bob Johnson</span>
+                                </div>
+                                <span class="card-date">Due: Mar 5</span>
+                            </div>
+                        </div>
+
+                        <div class="kanban-card" draggable="true">
+                            <div class="card-header">
+                                <span class="card-priority medium">Medium</span>
+                                <span class="card-id">#1027</span>
+                            </div>
+                            <h4>Schedule Stakeholder Review</h4>
+                            <p>Organize review meeting for new process discoveries</p>
+                            <div class="card-tags">
+                                <span class="tag">Review</span>
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-assignee">
+                                    <span class="avatar">AW</span>
+                                    <span>Alice W.</span>
+                                </div>
+                                <span class="card-date">Due: Feb 27</span>
+                            </div>
+                        </div>
+
+                        <div class="kanban-card" draggable="true">
+                            <div class="card-header">
+                                <span class="card-priority high">High</span>
+                                <span class="card-id">#1028</span>
+                            </div>
+                            <h4>API Integration Setup</h4>
+                            <p>Configure Azure Function APIs for automation</p>
+                            <div class="card-tags">
+                                <span class="tag">Technical</span>
+                                <span class="tag">Integration</span>
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-assignee">
+                                    <span class="avatar">JD</span>
+                                    <span>John Doe</span>
+                                </div>
+                                <span class="card-date">Due: Feb 24</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- In Progress Column -->
+                <div class="kanban-column" data-status="in-progress">
+                    <div class="column-header">
+                        <h3>🔄 In Progress</h3>
+                        <span class="task-count">4</span>
+                    </div>
+                    <div class="column-body">
+                        <div class="kanban-card" draggable="true">
+                            <div class="card-header">
+                                <span class="card-priority high">High</span>
+                                <span class="card-id">#1020</span>
+                            </div>
+                            <h4>Process Documentation Upload</h4>
+                            <p>Upload all process documentation PDFs to Azure Blob Storage</p>
+                            <div class="card-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 65%"></div>
+                                </div>
+                                <span class="progress-text">65% Complete</span>
+                            </div>
+                            <div class="card-tags">
+                                <span class="tag">Artifact Upload</span>
+                                <span class="tag">Documentation</span>
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-assignee">
+                                    <span class="avatar">JS</span>
+                                    <span>Jane Smith</span>
+                                </div>
+                                <span class="card-date">Due: Feb 22</span>
+                            </div>
+                        </div>
+
+                        <div class="kanban-card" draggable="true">
+                            <div class="card-header">
+                                <span class="card-priority high">High</span>
+                                <span class="card-id">#1021</span>
+                            </div>
+                            <h4>AI Validation - Customer Service</h4>
+                            <p>Running AI analysis on customer service call handling process</p>
+                            <div class="card-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 80%"></div>
+                                </div>
+                                <span class="progress-text">80% Complete</span>
+                            </div>
+                            <div class="card-tags">
+                                <span class="tag">AI Validation</span>
+                                <span class="tag">Customer Service</span>
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-assignee">
+                                    <span class="avatar">AI</span>
+                                    <span>AI Agent</span>
+                                </div>
+                                <span class="card-date">Due: Feb 20</span>
+                            </div>
+                        </div>
+
+                        <div class="kanban-card" draggable="true">
+                            <div class="card-header">
+                                <span class="card-priority medium">Medium</span>
+                                <span class="card-id">#1022</span>
+                            </div>
+                            <h4>Onboarding Process Review</h4>
+                            <p>Leadership review of employee onboarding documentation</p>
+                            <div class="card-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 40%"></div>
+                                </div>
+                                <span class="progress-text">40% Complete</span>
+                            </div>
+                            <div class="card-tags">
+                                <span class="tag">Review</span>
+                                <span class="tag">HR</span>
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-assignee">
+                                    <span class="avatar">BJ</span>
+                                    <span>Bob Johnson</span>
+                                </div>
+                                <span class="card-date">Due: Feb 26</span>
+                            </div>
+                        </div>
+
+                        <div class="kanban-card" draggable="true">
+                            <div class="card-header">
+                                <span class="card-priority medium">Medium</span>
+                                <span class="card-id">#1023</span>
+                            </div>
+                            <h4>Transcription Processing</h4>
+                            <p>Convert call recordings to text for AI analysis</p>
+                            <div class="card-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 55%"></div>
+                                </div>
+                                <span class="progress-text">55% Complete</span>
+                            </div>
+                            <div class="card-tags">
+                                <span class="tag">Processing</span>
+                                <span class="tag">Transcription</span>
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-assignee">
+                                    <span class="avatar">AI</span>
+                                    <span>AI Agent</span>
+                                </div>
+                                <span class="card-date">Due: Feb 23</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review Column -->
+                <div class="kanban-column" data-status="review">
+                    <div class="column-header">
+                        <h3>👀 Review</h3>
+                        <span class="task-count">3</span>
+                    </div>
+                    <div class="column-body">
+                        <div class="kanban-card" draggable="true">
+                            <div class="card-header">
+                                <span class="card-priority high">High</span>
+                                <span class="card-id">#1017</span>
+                            </div>
+                            <h4>Customer Service Call Handling</h4>
+                            <p>Complete process ready for final leadership approval</p>
+                            <div class="card-tags">
+                                <span class="tag">Process Documentation</span>
+                                <span class="tag">Customer Service</span>
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-assignee">
+                                    <span class="avatar">JS</span>
+                                    <span>Jane Smith</span>
+                                </div>
+                                <span class="card-date">Due: Feb 21</span>
+                            </div>
+                        </div>
+
+                        <div class="kanban-card" draggable="true">
+                            <div class="card-header">
+                                <span class="card-priority medium">Medium</span>
+                                <span class="card-id">#1018</span>
+                            </div>
+                            <h4>Compliance Audit Report</h4>
+                            <p>Review Q1 compliance audit findings</p>
+                            <div class="card-tags">
+                                <span class="tag">Compliance</span>
+                                <span class="tag">Review</span>
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-assignee">
+                                    <span class="avatar">BJ</span>
+                                    <span>Bob Johnson</span>
+                                </div>
+                                <span class="card-date">Due: Feb 23</span>
+                            </div>
+                        </div>
+
+                        <div class="kanban-card" draggable="true">
+                            <div class="card-header">
+                                <span class="card-priority medium">Medium</span>
+                                <span class="card-id">#1019</span>
+                            </div>
+                            <h4>Azure Function Deployment</h4>
+                            <p>Test and verify Azure Functions integration</p>
+                            <div class="card-tags">
+                                <span class="tag">Technical</span>
+                                <span class="tag">Deployment</span>
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-assignee">
+                                    <span class="avatar">JD</span>
+                                    <span>John Doe</span>
+                                </div>
+                                <span class="card-date">Due: Feb 24</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Completed Column -->
+                <div class="kanban-column" data-status="completed">
+                    <div class="column-header">
+                        <h3>✅ Completed</h3>
+                        <span class="task-count">6</span>
+                    </div>
+                    <div class="column-body">
+                        <div class="kanban-card completed" draggable="true">
+                            <div class="card-header">
+                                <span class="card-priority high">High</span>
+                                <span class="card-id">#1010</span>
+                            </div>
+                            <h4>Initial Process Discovery</h4>
+                            <p>Discovered and documented 15 core BPO processes</p>
+                            <div class="card-tags">
+                                <span class="tag">Process Documentation</span>
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-assignee">
+                                    <span class="avatar">JS</span>
+                                    <span>Jane Smith</span>
+                                </div>
+                                <span class="card-date">Completed: Feb 18</span>
+                            </div>
+                        </div>
+
+                        <div class="kanban-card completed" draggable="true">
+                            <div class="card-header">
+                                <span class="card-priority high">High</span>
+                                <span class="card-id">#1011</span>
+                            </div>
+                            <h4>Azure Blob Storage Setup</h4>
+                            <p>Configured and deployed Azure Blob Storage for artifacts</p>
+                            <div class="card-tags">
+                                <span class="tag">Technical</span>
+                                <span class="tag">Azure</span>
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-assignee">
+                                    <span class="avatar">JD</span>
+                                    <span>John Doe</span>
+                                </div>
+                                <span class="card-date">Completed: Feb 17</span>
+                            </div>
+                        </div>
+
+                        <div class="kanban-card completed" draggable="true">
+                            <div class="card-header">
+                                <span class="card-priority medium">Medium</span>
+                                <span class="card-id">#1012</span>
+                            </div>
+                            <h4>User Training Materials</h4>
+                            <p>Created training documentation for platform users</p>
+                            <div class="card-tags">
+                                <span class="tag">Documentation</span>
+                                <span class="tag">Training</span>
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-assignee">
+                                    <span class="avatar">AW</span>
+                                    <span>Alice W.</span>
+                                </div>
+                                <span class="card-date">Completed: Feb 16</span>
+                            </div>
+                        </div>
+
+                        <div class="kanban-card completed" draggable="true">
+                            <div class="card-header">
+                                <span class="card-priority high">High</span>
+                                <span class="card-id">#1013</span>
+                            </div>
+                            <h4>AI Model Integration</h4>
+                            <p>Integrated LLM for process analysis</p>
+                            <div class="card-tags">
+                                <span class="tag">AI Validation</span>
+                                <span class="tag">Integration</span>
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-assignee">
+                                    <span class="avatar">JD</span>
+                                    <span>John Doe</span>
+                                </div>
+                                <span class="card-date">Completed: Feb 15</span>
+                            </div>
+                        </div>
+
+                        <div class="kanban-card completed" draggable="true">
+                            <div class="card-header">
+                                <span class="card-priority medium">Medium</span>
+                                <span class="card-id">#1014</span>
+                            </div>
+                            <h4>SQL Database Schema Design</h4>
+                            <p>Designed and implemented Azure SQL database schema</p>
+                            <div class="card-tags">
+                                <span class="tag">Technical</span>
+                                <span class="tag">Database</span>
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-assignee">
+                                    <span class="avatar">BJ</span>
+                                    <span>Bob Johnson</span>
+                                </div>
+                                <span class="card-date">Completed: Feb 14</span>
+                            </div>
+                        </div>
+
+                        <div class="kanban-card completed" draggable="true">
+                            <div class="card-header">
+                                <span class="card-priority low">Low</span>
+                                <span class="card-id">#1015</span>
+                            </div>
+                            <h4>Team Onboarding Session</h4>
+                            <p>Conducted platform onboarding for new team members</p>
+                            <div class="card-tags">
+                                <span class="tag">Training</span>
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-assignee">
+                                    <span class="avatar">JS</span>
+                                    <span>Jane Smith</span>
+                                </div>
+                                <span class="card-date">Completed: Feb 12</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Board Statistics -->
+            <section class="board-stats">
+                <div class="stat-card">
+                    <h4>Total Tasks</h4>
+                    <div class="stat-value">18</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Completion Rate</h4>
+                    <div class="stat-value">33%</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Avg. Time in Progress</h4>
+                    <div class="stat-value">3.2 days</div>
+                </div>
+                <div class="stat-card">
+                    <h4>High Priority</h4>
+                    <div class="stat-value">7 tasks</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="bpo-platform.js"></script>
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="BPO Process Discovery Platform - Workflow Engine">
+    <title>Workflow Engine - BPO AI Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="bpo-platform.css">
+</head>
+<body class="workflow-page">
+    <!-- Header with Navigation -->
+    <header class="platform-header">
+        <div class="header-container">
+            <div class="logo">
+                <h1>BPO AI Platform</h1>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="dashboard.html">Home</a></li>
+                    <li><a href="workflow.html" class="active">Workflow</a></li>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="admin.html">Admin</a></li>
+                    <li><a href="#settings">Settings</a></li>
+                </ul>
+            </nav>
+            <div class="user-menu">
+                <span class="user-name">John Doe</span>
+                <a href="login.html" class="btn btn-sm">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="platform-layout">
+        <!-- Sidebar -->
+        <aside class="platform-sidebar">
+            <h3>Quick Links</h3>
+            <nav class="sidebar-nav">
+                <a href="workflow.html" class="sidebar-link active">
+                    <span class="icon">📋</span>
+                    <span>Workflow Engine</span>
+                </a>
+                <a href="upload.html" class="sidebar-link">
+                    <span class="icon">📤</span>
+                    <span>Upload Files</span>
+                </a>
+                <a href="analysis.html" class="sidebar-link">
+                    <span class="icon">🤖</span>
+                    <span>AI Analysis</span>
+                </a>
+                <a href="kanban.html" class="sidebar-link">
+                    <span class="icon">📊</span>
+                    <span>Kanban Board</span>
+                </a>
+                <a href="admin.html" class="sidebar-link">
+                    <span class="icon">⚙️</span>
+                    <span>Admin Config</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="platform-main">
+            <div class="page-header">
+                <h1>Workflow Engine</h1>
+                <p>Process Discovery Workflow Tracker</p>
+            </div>
+
+            <!-- Step-by-step Tracker -->
+            <section class="workflow-tracker">
+                <h2>Process Steps</h2>
+                <div class="steps-container">
+                    <div class="step completed">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3>Meta Information</h3>
+                            <p>Process name, description, owner</p>
+                            <span class="step-status">✅ Completed</span>
+                        </div>
+                    </div>
+
+                    <div class="step in-progress">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3>Artifact Upload</h3>
+                            <p>Videos, PDFs, recordings, transcriptions</p>
+                            <span class="step-status">🔄 In Progress</span>
+                        </div>
+                    </div>
+
+                    <div class="step pending">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3>AI Validation</h3>
+                            <p>LLM analysis and validation</p>
+                            <span class="step-status">⏳ Pending</span>
+                        </div>
+                    </div>
+
+                    <div class="step pending">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h3>Review & Approval</h3>
+                            <p>Leadership review and sign-off</p>
+                            <span class="step-status">⏳ Pending</span>
+                        </div>
+                    </div>
+
+                    <div class="step pending">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h3>Deployment</h3>
+                            <p>Process automation deployment</p>
+                            <span class="step-status">⏳ Pending</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Required Inputs Checklist -->
+            <section class="checklist-section">
+                <h2>Required Inputs Checklist</h2>
+                <div class="checklist-grid">
+                    <div class="checklist-card">
+                        <h3>📝 Meta Information</h3>
+                        <ul class="checklist">
+                            <li class="completed">
+                                <input type="checkbox" checked disabled>
+                                <span>Process Name</span>
+                            </li>
+                            <li class="completed">
+                                <input type="checkbox" checked disabled>
+                                <span>Process Description</span>
+                            </li>
+                            <li class="completed">
+                                <input type="checkbox" checked disabled>
+                                <span>Process Owner</span>
+                            </li>
+                            <li class="completed">
+                                <input type="checkbox" checked disabled>
+                                <span>Business Unit</span>
+                            </li>
+                        </ul>
+                        <div class="checklist-status completed">All Complete</div>
+                    </div>
+
+                    <div class="checklist-card">
+                        <h3>📤 Artifacts</h3>
+                        <ul class="checklist">
+                            <li class="completed">
+                                <input type="checkbox" checked disabled>
+                                <span>Process Documentation</span>
+                            </li>
+                            <li class="in-progress">
+                                <input type="checkbox" disabled>
+                                <span>Training Videos</span>
+                            </li>
+                            <li class="in-progress">
+                                <input type="checkbox" disabled>
+                                <span>Call Recordings</span>
+                            </li>
+                            <li class="pending">
+                                <input type="checkbox" disabled>
+                                <span>Transcriptions</span>
+                            </li>
+                        </ul>
+                        <div class="checklist-status in-progress">In Progress (25%)</div>
+                    </div>
+
+                    <div class="checklist-card">
+                        <h3>✅ Validation</h3>
+                        <ul class="checklist">
+                            <li class="pending">
+                                <input type="checkbox" disabled>
+                                <span>AI Analysis Complete</span>
+                            </li>
+                            <li class="pending">
+                                <input type="checkbox" disabled>
+                                <span>Compliance Check</span>
+                            </li>
+                            <li class="pending">
+                                <input type="checkbox" disabled>
+                                <span>Quality Review</span>
+                            </li>
+                            <li class="pending">
+                                <input type="checkbox" disabled>
+                                <span>Leadership Approval</span>
+                            </li>
+                        </ul>
+                        <div class="checklist-status pending">Pending</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Chatbot Interface -->
+            <section class="chatbot-section">
+                <div class="chatbot-container">
+                    <div class="chatbot-header">
+                        <h3>🤖 AI Assistant</h3>
+                        <button class="btn btn-sm" id="minimizeChatbot">−</button>
+                    </div>
+                    <div class="chatbot-messages" id="chatbotMessages">
+                        <div class="message bot-message">
+                            <div class="message-avatar">🤖</div>
+                            <div class="message-content">
+                                <p>Hello! I'm your AI assistant. I can help you with process discovery workflows. What would you like to know?</p>
+                                <span class="message-time">Just now</span>
+                            </div>
+                        </div>
+                        <div class="message user-message">
+                            <div class="message-content">
+                                <p>What's the status of my current workflow?</p>
+                                <span class="message-time">Just now</span>
+                            </div>
+                            <div class="message-avatar">👤</div>
+                        </div>
+                        <div class="message bot-message">
+                            <div class="message-avatar">🤖</div>
+                            <div class="message-content">
+                                <p>You're currently on Step 2: Artifact Upload. You've completed the meta information, and you're 25% done with uploading artifacts. Would you like to continue uploading files?</p>
+                                <span class="message-time">Just now</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chatbot-input">
+                        <input type="text" placeholder="Type your message..." class="chatbot-text">
+                        <button class="btn btn-primary">Send</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Actions -->
+            <section class="actions-section">
+                <h2>Quick Actions</h2>
+                <div class="action-buttons">
+                    <a href="upload.html" class="btn btn-primary">Upload Artifacts</a>
+                    <a href="analysis.html" class="btn btn-secondary">View AI Analysis</a>
+                    <button class="btn btn-secondary">Save Progress</button>
+                    <button class="btn btn-secondary">Export Report</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="bpo-platform.js"></script>
+</body>
+</html>
