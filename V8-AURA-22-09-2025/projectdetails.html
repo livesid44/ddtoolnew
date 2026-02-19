@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Project Details</title>
+    <link href="css/bootstrap.css" rel="stylesheet" />
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/custom.js"></script>
+    <link rel="stylesheet" href="css/bootstrap-icons.css" />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-sm">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="leadership.html">
+          <img class="micro-logo" src="images/aura.png" />
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#mynavbar"
+        >
+          <span class="navbar-toggler-icon"><i class="bi bi-list"></i></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mynavbar">
+          <label class="logo me-auto"></label>
+          <form class="d-flex">
+            <div class="dropdown">
+              <button
+                type="button"
+                class="btn username dropdown-toggle"
+                data-bs-toggle="dropdown"
+              >
+                <img class="user-pic" src="images/user-pic.png" />Mohammad Ameer
+                Shaikh
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Link 1</a></li>
+                <li><a class="dropdown-item" href="#">Link 2</a></li>
+                <li><a class="dropdown-item" href="#">Link 3</a></li>
+              </ul>
+            </div>
+
+            <i class="bi bi-bell-fill mt"></i>
+          </form>
+        </div>
+      </div>
+    </nav>
+
+    <div class="aura2">
+      <div class="container-fluid">
+        <div class="clear-20"></div>
+
+        <div class="white-bg">
+          <div class="pg-title">Project Details</div>
+          <hr />
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Project Name <span class="text-red">*</span></label>
+                <input type="text" class="form-control form-control-sm" />
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Project Id <span class="text-red">*</span></label>
+                <input type="text" class="form-control form-control-sm" />
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>IBU <span class="text-red">*</span></label>
+                <input type="text" class="form-control form-control-sm" />
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>IBU Head <span class="text-red">*</span></label>
+                <input type="text" class="form-control form-control-sm" />
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Location <span class="text-red">*</span></label>
+                <select type="text" class="form-select form-select-sm"></select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Geo <span class="text-red">*</span></label>
+                <select type="text" class="form-select form-select-sm"></select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label
+                  >Total number of LBO <span class="text-red">*</span></label
+                >
+                <input type="text" class="form-control form-control-sm" />
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>FTE Base <span class="text-red">*</span></label>
+                <input type="text" class="form-control form-control-sm" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="clear-20"></div>
+
+        <div class="white-bg">
+          <div class="pg-title">Quality Manager</div>
+          <hr />
+          <div>
+            <ul class="nav nav-pills">
+              <li>
+                <a data-bs-toggle="pill" href="#home" class="active"
+                  >Existing User</a
+                >
+              </li>
+              <li><a data-bs-toggle="pill" href="#menu1">New User</a></li>
+            </ul>
+
+            <div class="tab-content">
+              <div id="home" class="tab-pane in active">
+                <div class="row">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Employee ID <span class="text-red">*</span></label>
+
+                      <div class="input-group">
+                        <input
+                          type="text"
+                          class="form-control form-control-sm"
+                          placeholder="Search"
+                        />
+                        <span class="input-group-text"
+                          ><i class="bi bi-search"></i
+                        ></span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>First Name <span class="text-red">*</span></label>
+                      <input type="text" class="form-control form-control-sm" />
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Last Name <span class="text-red">*</span></label>
+                      <input type="text" class="form-control form-control-sm" />
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label
+                        >Attach Email <span class="text-red">*</span></label
+                      >
+                      <input type="File" class="form-control form-control-sm" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="menu1" class="tab-pane fade">
+                <div class="row">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Employee ID <span class="text-red">*</span></label>
+                      <input
+                        type="text"
+                        class="form-control form-control-sm"
+                        placeholder="Search"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Lan ID<span class="text-red">*</span></label>
+                      <input type="text" class="form-control form-control-sm" />
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>First Name <span class="text-red">*</span></label>
+                      <input type="text" class="form-control form-control-sm" />
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Last Name <span class="text-red">*</span></label>
+                      <input type="text" class="form-control form-control-sm" />
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Email <span class="text-red">*</span></label>
+                      <input
+                        type="email"
+                        class="form-control form-control-sm"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Location <span class="text-red">*</span></label>
+                      <select class="form-select form-select-sm">
+                        <option></option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label
+                        >Attach Email <span class="text-red">*</span></label
+                      >
+                      <input type="File" class="form-control form-control-sm" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="clear-20"></div>
+          <center>
+            <button
+              class="btn btn-sm btn-br"
+              data-bs-toggle="modal"
+              data-bs-target="#preview"
+            >
+              Preview
+            </button>
+            <button class="btn btn-sm btn-br">Cancel</button>
+          </center>
+        </div>
+      </div>
+    </div>
+    <div class="modal" id="preview">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h6 class="modal-title">Project Details</h6>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <b>Project Details</b>
+            <div class="clear-10"></div>
+            <div class="table-responsive">
+              <table class="table tbl table-bordered">
+                <tr>
+                  <th>Project Name</th>
+                  <th>Project ID</th>
+                  <th>IBU</th>
+                  <th>IBU Head</th>
+                  <th>Location</th>
+                  <th>Geo</th>
+                  <th>Total LOB</th>
+                  <th>FTE Base</th>
+                </tr>
+                <tr>
+                  <td>Project Name Test</td>
+                  <td>898</td>
+                  <td>IBU Test</td>
+                  <td>IBU Head test</td>
+                  <td>Location Test</td>
+                  <td>Geo Test</td>
+                  <td>8080</td>
+                  <td>*</td>
+                </tr>
+              </table>
+            </div>
+            <div class="clear-10"></div>
+            <b>Quality Manager (New User)</b>
+            <div class="clear-10"></div>
+            <div class="table-responsive">
+              <table class="table tbl table-bordered">
+                <tr>
+                  <th>Employee Id</th>
+                  <th>Lan ID</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Email</th>
+                  <th>Location</th>
+                  <th>Approval Mail File</th>
+                </tr>
+                <tr>
+                  <td>234242</td>
+                  <td>SP8778768</td>
+                  <td>Lorem Lpsum</td>
+                  <td>Lorem Lpsum</td>
+                  <td>Lorem@Lpsum.com</td>
+                  <td>Lorem Lpsum test</td>
+                  <td>lpsum.png</td>
+                </tr>
+              </table>
+            </div>
+            <div class="clear-10"></div>
+            <div class="row">
+              <div class="col-md-8">
+                <div class="form-control">
+                  <input type="checkbox" class="d-inline" />
+                  <label class="d-inline"
+                    >I hearby declare that the information provided is true and
+                    I agree to the Terms and Conditions</label
+                  >
+                </div>
+              </div>
+              <div class="col-md-4">
+                <button class="btn btn-sm btn-reset">Edit</button>
+                <button class="btn btn-sm btn-br">Confirm & Save</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modal footer -->
+          <!--<div class="modal-footer">
+                      <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                  </div>-->
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
