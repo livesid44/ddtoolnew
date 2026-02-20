@@ -13,6 +13,7 @@ public class BPODbContext(DbContextOptions<BPODbContext> options) : DbContext(op
     public DbSet<ProcessArtifact> Artifacts => Set<ProcessArtifact>();
     public DbSet<WorkflowStep> WorkflowSteps => Set<WorkflowStep>();
     public DbSet<KanbanCard> KanbanCards => Set<KanbanCard>();
+    public DbSet<ApplicationUser> Users => Set<ApplicationUser>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -66,6 +67,20 @@ public class BPODbContext(DbContextOptions<BPODbContext> options) : DbContext(op
             e.Property(k => k.AssignedTo).HasMaxLength(200);
             e.HasIndex(k => new { k.ProcessId, k.Column });
             e.Ignore(k => k.DomainEvents);
+        });
+
+        // ApplicationUser
+        modelBuilder.Entity<ApplicationUser>(e =>
+        {
+            e.HasKey(u => u.Id);
+            e.Property(u => u.Username).HasMaxLength(50).IsRequired();
+            e.Property(u => u.Email).HasMaxLength(200).IsRequired();
+            e.Property(u => u.DisplayName).HasMaxLength(200);
+            e.Property(u => u.Role).HasMaxLength(50).IsRequired();
+            e.Property(u => u.LdapDomain).HasMaxLength(200);
+            e.HasIndex(u => u.Username).IsUnique();
+            e.HasIndex(u => u.Email).IsUnique();
+            e.Ignore(u => u.DomainEvents);
         });
     }
 }

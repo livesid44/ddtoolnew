@@ -33,5 +33,13 @@ public enum UserRole
     Viewer = 0,
     Analyst = 1,
     Manager = 2,
-    Admin = 3
+    Admin = 3,
+    SuperAdmin = 4
+}
+
+/// <summary>Well-known role name constants used in policy and JWT claims.</summary>
+public static class Roles
+{
+    public const string SuperAdmin = "SuperAdmin";
+    public const string User = "User";
 }

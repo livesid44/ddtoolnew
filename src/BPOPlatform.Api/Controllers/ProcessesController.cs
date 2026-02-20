@@ -3,6 +3,7 @@ using BPOPlatform.Application.Processes.Commands;
 using BPOPlatform.Application.Processes.DTOs;
 using BPOPlatform.Application.Processes.Queries;
 using BPOPlatform.Domain.Enums;
+using BPOPlatform.Domain.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +14,7 @@ namespace BPOPlatform.Api.Controllers;
 [ApiController]
 [Route("api/v1/[controller]")]
 [Produces("application/json")]
-public class ProcessesController(IMediator mediator) : ControllerBase
+public class ProcessesController(IMediator mediator, ICurrentUserService currentUser) : ControllerBase
 {
     /// <summary>
     /// List processes with optional filtering, sorting, and pagination.
@@ -39,6 +40,10 @@ public class ProcessesController(IMediator mediator) : ControllerBase
     {
         pageSize = Math.Clamp(pageSize, 1, 100);
         page = Math.Max(1, page);
+
+        // RBAC: non-SuperAdmin users can only see their own processes
+        if (!currentUser.IsSuperAdmin)
+            ownerId = currentUser.UserId?.ToString();
 
         var result = await mediator.Send(
             new GetAllProcessesQuery(department, status, ownerId, sortBy, descending, page, pageSize), ct);

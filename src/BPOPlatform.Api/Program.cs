@@ -3,12 +3,15 @@ using BPOPlatform.Api.Middleware;
 using BPOPlatform.Application.DependencyInjection;
 using BPOPlatform.Infrastructure.DependencyInjection;
 using BPOPlatform.Infrastructure.Persistence;
+using BPOPlatform.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Events;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,33 +29,115 @@ if (!string.IsNullOrWhiteSpace(appInsightsConnStr) && !appInsightsConnStr.Starts
 Log.Logger = loggerConfig.CreateLogger();
 builder.Host.UseSerilog();
 
-// ── Authentication (Azure AD / Entra ID) ─────────────────────────────────────
-// In Production: enforce Azure AD JWT auth on all controllers.
-// In Development: auth middleware is registered but controllers have no [Authorize],
-// so the API is accessible without a token for local development.
+// ── JWT / Auth config ─────────────────────────────────────────────────────────
+var jwtSecret = builder.Configuration["Jwt:Secret"] ?? string.Empty;
+var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "BPOPlatform";
+var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "BPOPlatformClients";
+var hasLocalJwt = !string.IsNullOrWhiteSpace(jwtSecret) && !jwtSecret.StartsWith("__");
+
+// ── Authentication ────────────────────────────────────────────────────────────
 if (!builder.Environment.IsDevelopment())
 {
-    builder.Services
-        .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-        .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
-    builder.Services.AddAuthorization();
+    // Production: accept BOTH Azure AD tokens AND locally-issued tokens.
+    // AddMicrosoftIdentityWebApi returns a different builder type, so we capture
+    // the base AuthenticationBuilder first, then chain additional schemes onto it.
+    var authBuilder = builder.Services
+        .AddAuthentication(options =>
+        {
+            options.DefaultScheme = "MultiScheme";
+            options.DefaultChallengeScheme = "MultiScheme";
+        });
+
+    authBuilder.AddMicrosoftIdentityWebApi(
+        builder.Configuration.GetSection("AzureAd"),
+        jwtBearerScheme: "AzureAd");
+
+    if (hasLocalJwt)
+    {
+        authBuilder.AddJwtBearer("LocalJwt", opts =>
+        {
+            opts.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
+                ValidateIssuer = true,
+                ValidIssuer = jwtIssuer,
+                ValidateAudience = true,
+                ValidAudience = jwtAudience,
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.FromMinutes(2)
+            };
+        });
+    }
+
+    // MultiScheme: forward to LocalJwt first; if that fails, AzureAd picks it up.
+    // In practice, the issuer claim differentiates the two token types.
+    authBuilder.AddPolicyScheme("MultiScheme", "AzureAd or LocalJwt", opts =>
+    {
+        opts.ForwardDefaultSelector = context =>
+        {
+            var auth = context.Request.Headers.Authorization.FirstOrDefault();
+            if (auth?.StartsWith("Bearer ") == true)
+            {
+                // Decode issuer without full validation to route correctly
+                try
+                {
+                    var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+                    if (handler.CanReadToken(auth["Bearer ".Length..]))
+                    {
+                        var jwt = handler.ReadJwtToken(auth["Bearer ".Length..]);
+                        if (jwt.Issuer == jwtIssuer) return "LocalJwt";
+                    }
+                }
+                catch { /* Fall through to AzureAd */ }
+            }
+            return "AzureAd";
+        };
+    });
+
+    builder.Services.AddAuthorization(opts => BuildPolicies(opts, hasLocalJwt));
 }
 else
 {
     // ── Development auth bypass ───────────────────────────────────────────────
-    // DevBypassAuthHandler: populates ctx.User so controller code can read claims.
-    // DevPermissivePolicyProvider: replaces the entire authorization policy system so
-    //   [Authorize] (with or without a named policy) always succeeds without a real token.
-    builder.Services.AddAuthentication("DevBypass")
+    // DevBypassAuthHandler: populates ctx.User as SuperAdmin for all requests.
+    // LocalJwt: also registered so the actual login flow can be tested locally.
+    var devAuthBuilder = builder.Services
+        .AddAuthentication("DevBypass")
         .AddScheme<Microsoft.AspNetCore.Authentication.AuthenticationSchemeOptions,
                    DevBypassAuthHandler>("DevBypass", _ => { });
+
+    if (hasLocalJwt)
+    {
+        devAuthBuilder.AddJwtBearer("LocalJwt", opts =>
+        {
+            opts.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
+                ValidateIssuer = true,
+                ValidIssuer = jwtIssuer,
+                ValidateAudience = true,
+                ValidAudience = jwtAudience,
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.FromMinutes(2)
+            };
+        });
+    }
+
     builder.Services.AddAuthorization();
+    // DevPermissivePolicyProvider makes ALL [Authorize] checks succeed without a real token.
     builder.Services.AddSingleton<IAuthorizationPolicyProvider, DevPermissivePolicyProvider>();
 }
 
 // ── Application & Infrastructure layers ──────────────────────────────────────
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
+
+// ── Current User service (depends on IHttpContextAccessor, registered here) ──
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<BPOPlatform.Domain.Interfaces.ICurrentUserService,
+                            BPOPlatform.Api.Middleware.CurrentUserService>();
 
 // ── API ───────────────────────────────────────────────────────────────────────
 builder.Services.AddControllers();
@@ -65,7 +150,7 @@ builder.Services.AddSwaggerGen(c =>
         Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
         Scheme = "bearer",
         BearerFormat = "JWT",
-        Description = "Enter your Azure AD JWT token (not required in Development)."
+        Description = "Enter a JWT token from POST /api/v1/auth/login (local) or Azure AD. Not required in Development."
     });
     c.AddSecurityRequirement(new()
     {
@@ -132,3 +217,27 @@ app.MapHealthChecks("/healthz");
 app.MapHub<NotificationHub>("/hubs/notifications");
 
 app.Run();
+
+// ── Authorization policy helper ───────────────────────────────────────────────
+static void BuildPolicies(AuthorizationOptions opts, bool hasLocalJwt)
+{
+    var schemes = hasLocalJwt
+        ? new[] { "AzureAd", "LocalJwt" }
+        : new[] { "AzureAd" };
+
+    // Default policy – any authenticated user via any supported scheme
+    opts.DefaultPolicy = new AuthorizationPolicyBuilder(schemes)
+        .RequireAuthenticatedUser()
+        .Build();
+
+    // SuperAdmin-only endpoints
+    opts.AddPolicy("SuperAdminOnly", p => p
+        .AddAuthenticationSchemes(schemes)
+        .RequireAuthenticatedUser()
+        .RequireRole("SuperAdmin"));
+
+    // Any authenticated user (same as Default, explicit alias)
+    opts.AddPolicy("AnyUser", p => p
+        .AddAuthenticationSchemes(schemes)
+        .RequireAuthenticatedUser());
+}

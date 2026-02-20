@@ -53,6 +53,21 @@ public static class InfrastructureServiceExtensions
         services.AddScoped<IArtifactRepository, ArtifactRepository>();
         services.AddScoped<IWorkflowStepRepository, WorkflowStepRepository>();
         services.AddScoped<IKanbanCardRepository, KanbanCardRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
+
+        // ── Auth & Identity ────────────────────────────────────────────────────
+        services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
+        services.AddScoped<IPasswordHasherService, PasswordHasherService>();
+        services.AddScoped<IJwtTokenService, JwtTokenService>();
+        // ICurrentUserService is registered by the API project (requires IHttpContextAccessor)
+
+        // ── LDAP ──────────────────────────────────────────────────────────────
+        services.Configure<LdapSettings>(configuration.GetSection(LdapSettings.SectionName));
+        var ldapHost = configuration[$"{LdapSettings.SectionName}:Host"];
+        if (!string.IsNullOrWhiteSpace(ldapHost) && !ldapHost.StartsWith("__"))
+            services.AddScoped<ILdapAuthService, LdapAuthService>();
+        else
+            services.AddScoped<ILdapAuthService, MockLdapAuthService>();
 
         var blobConnectionString = configuration.GetConnectionString("BlobStorage");
         var blobEndpoint = configuration["AzureStorage:ServiceUri"];

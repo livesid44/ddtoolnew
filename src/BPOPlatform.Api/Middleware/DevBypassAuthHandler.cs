@@ -21,10 +21,11 @@ public class DevBypassAuthHandler(
     {
         var claims = new[]
         {
-            new Claim(ClaimTypes.NameIdentifier, "dev-user-id"),
-            new Claim(ClaimTypes.Name, "Developer"),
+            new Claim(ClaimTypes.NameIdentifier, "00000000-0000-0000-0000-000000000001"),
+            new Claim(ClaimTypes.Name, "dev-superadmin"),
             new Claim(ClaimTypes.Email, "dev@localhost"),
-            new Claim(ClaimTypes.Role, "Admin")
+            new Claim(ClaimTypes.Role, "SuperAdmin"),
+            new Claim("preferred_username", "dev-superadmin")
         };
 
         var identity = new ClaimsIdentity(claims, Scheme.Name);
