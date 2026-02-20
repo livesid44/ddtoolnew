@@ -39,6 +39,16 @@ public class LocalBlobStorageService(ILogger<LocalBlobStorageService> logger) : 
         return Task.FromResult(new Uri($"file://{filePath}"));
     }
 
+    public Task<Stream> DownloadAsync(string containerName, string blobName, CancellationToken ct = default)
+    {
+        var safeFileName = blobName.Replace('/', '_').Replace('\\', '_');
+        var filePath = Path.Combine(BasePath, containerName, safeFileName);
+        if (!File.Exists(filePath))
+            throw new FileNotFoundException($"[LocalBlob] Blob not found: {filePath}");
+        Stream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+        return Task.FromResult(stream);
+    }
+
     public Task DeleteAsync(string containerName, string blobName, CancellationToken ct = default)
     {
         var safeFileName = blobName.Replace('/', '_').Replace('\\', '_');

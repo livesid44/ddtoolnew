@@ -19,6 +19,12 @@ public class ProcessArtifact : BaseEntity
     public bool IsAnalyzed { get; private set; }
     public double? ConfidenceScore { get; private set; }
 
+    /// <summary>
+    /// Text extracted from the document (via Azure AI Document Intelligence) or
+    /// transcription of audio (via Azure AI Speech Services). Null until extraction runs.
+    /// </summary>
+    public string? ExtractedText { get; private set; }
+
     private ProcessArtifact() { }
 
     public static ProcessArtifact Create(Guid processId, string fileName, ArtifactType type, string blobPath, long fileSizeBytes)
@@ -41,6 +47,13 @@ public class ProcessArtifact : BaseEntity
     {
         IsAnalyzed = true;
         ConfidenceScore = Math.Clamp(confidenceScore, 0, 1);
+        UpdatedAt = DateTime.UtcNow;
+    }
+
+    /// <summary>Stores the extracted text from Document Intelligence or Speech transcription.</summary>
+    public void SetExtractedText(string text)
+    {
+        ExtractedText = text;
         UpdatedAt = DateTime.UtcNow;
     }
 }

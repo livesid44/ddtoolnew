@@ -44,6 +44,7 @@ public class BPODbContext(DbContextOptions<BPODbContext> options) : DbContext(op
             e.HasKey(a => a.Id);
             e.Property(a => a.FileName).HasMaxLength(500).IsRequired();
             e.Property(a => a.BlobPath).HasMaxLength(1000).IsRequired();
+            e.Property(a => a.ExtractedText);  // nullable, no max length (can be large)
             e.Ignore(a => a.DomainEvents);
         });
 

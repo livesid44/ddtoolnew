@@ -34,7 +34,10 @@ public class AnalyseProcessCommandHandler(
                       ?? throw new KeyNotFoundException($"Process {request.ProcessId} not found.");
 
         var artifacts = await artifactRepo.GetByProcessIdAsync(request.ProcessId, ct);
-        var artifactTexts = artifacts.Select(a => a.FileName).ToList();
+        // Prefer extracted text (from Document Intelligence / Speech) over the raw filename
+        var artifactTexts = artifacts
+            .Select(a => a.ExtractedText ?? a.FileName)
+            .ToList();
 
         var result = await aiService.AnalyzeProcessAsync(process.Description, artifactTexts, ct);
 

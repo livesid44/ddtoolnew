@@ -173,12 +173,12 @@ All Azure services are encapsulated behind interfaces – swap any service witho
 - [x] API client module (`js/api-client.js`) with Bearer token injection and loading indicator
 - [x] All pages wired: dashboard, upload, analysis, kanban, workflow, login
 
-### Phase 4 – AI & Automation (Weeks 10–12)
-- [ ] Document intelligence (Azure AI Document Intelligence for PDF extraction)
-- [ ] Speech-to-text transcription (Azure AI Speech for MP3/WAV)
-- [ ] Automated workflow advancement (Durable Functions orchestration)
-- [ ] Power Automate connector for external ticketing (ServiceNow, Jira)
-- [ ] LLM-generated process documentation (Word/PDF export)
+### Phase 4 – AI & Automation (Weeks 10–12) ✅
+- [x] Document intelligence (Azure AI Document Intelligence for PDF extraction)
+- [x] Speech-to-text transcription (Azure AI Speech Services for MP3/WAV/M4A)
+- [x] Automated workflow advancement (Durable Functions orchestration with 4 activities)
+- [x] Power Automate connector for external ticketing (ServiceNow, Jira, Azure DevOps)
+- [x] LLM-generated process documentation (Markdown / HTML / Word `.docx` export)
 
 ### Phase 5 – Production Hardening (Weeks 13–16)
 - [ ] API versioning (`/api/v1/`, `/api/v2/`)

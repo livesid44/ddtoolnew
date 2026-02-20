@@ -1,3 +1,4 @@
+using Azure.AI.DocumentIntelligence;
 using Azure.AI.OpenAI;
 using Azure.Identity;
 using Azure.Storage.Blobs;
@@ -91,6 +92,69 @@ public static class InfrastructureServiceExtensions
         {
             // Fallback: mock AI service (no Azure OpenAI configured)
             services.AddScoped<IAiAnalysisService, MockAiAnalysisService>();
+        }
+
+        // ── Document Intelligence ─────────────────────────────────────────────
+        services.Configure<DocumentIntelligenceOptions>(
+            configuration.GetSection(DocumentIntelligenceOptions.SectionName));
+
+        var docIntelEndpoint = configuration[$"{DocumentIntelligenceOptions.SectionName}:Endpoint"];
+        if (!string.IsNullOrWhiteSpace(docIntelEndpoint)
+            && !docIntelEndpoint.StartsWith("__")
+            && Uri.TryCreate(docIntelEndpoint, UriKind.Absolute, out var docIntelUri))
+        {
+            services.AddSingleton(_ => new DocumentIntelligenceClient(docIntelUri, new DefaultAzureCredential()));
+            services.AddScoped<IDocumentIntelligenceService, AzureDocumentIntelligenceService>();
+        }
+        else
+        {
+            services.AddScoped<IDocumentIntelligenceService, MockDocumentIntelligenceService>();
+        }
+
+        // ── Speech Services ───────────────────────────────────────────────────
+        services.Configure<SpeechServicesOptions>(
+            configuration.GetSection(SpeechServicesOptions.SectionName));
+
+        var speechKey = configuration[$"{SpeechServicesOptions.SectionName}:SubscriptionKey"];
+        if (!string.IsNullOrWhiteSpace(speechKey) && !speechKey.StartsWith("__"))
+        {
+            services.AddHttpClient("SpeechServices");
+            services.AddScoped<ISpeechTranscriptionService, AzureSpeechTranscriptionService>();
+        }
+        else
+        {
+            services.AddScoped<ISpeechTranscriptionService, MockSpeechTranscriptionService>();
+        }
+
+        // ── Document Generation ───────────────────────────────────────────────
+        // Reuse the Azure OpenAI client if it was already registered; otherwise use template fallback.
+        var openAiEndpoint2 = configuration[$"{AzureOpenAiOptions.SectionName}:Endpoint"];
+        if (!string.IsNullOrWhiteSpace(openAiEndpoint2)
+            && !openAiEndpoint2.StartsWith("__")
+            && Uri.TryCreate(openAiEndpoint2, UriKind.Absolute, out _))
+        {
+            services.AddScoped<IDocumentGenerationService, OpenAiDocumentGenerationService>();
+        }
+        else
+        {
+            services.AddScoped<IDocumentGenerationService, MarkdownDocumentGenerationService>();
+        }
+
+        // ── External Ticketing (Power Automate) ───────────────────────────────
+        services.Configure<PowerAutomateOptions>(
+            configuration.GetSection(PowerAutomateOptions.SectionName));
+
+        var flowUrl = configuration[$"{PowerAutomateOptions.SectionName}:FlowUrl"];
+        if (!string.IsNullOrWhiteSpace(flowUrl)
+            && !flowUrl.StartsWith("__")
+            && Uri.TryCreate(flowUrl, UriKind.Absolute, out _))
+        {
+            services.AddHttpClient("PowerAutomate");
+            services.AddScoped<IExternalTicketingService, PowerAutomateTicketingService>();
+        }
+        else
+        {
+            services.AddScoped<IExternalTicketingService, NoOpTicketingService>();
         }
 
         return services;

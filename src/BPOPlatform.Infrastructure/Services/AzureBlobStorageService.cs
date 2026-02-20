@@ -29,6 +29,15 @@ public class AzureBlobStorageService(BlobServiceClient blobClient, ILogger<Azure
         return blobName;
     }
 
+    public async Task<Stream> DownloadAsync(string containerName, string blobName, CancellationToken ct = default)
+    {
+        var container = blobClient.GetBlobContainerClient(containerName);
+        var blob = container.GetBlobClient(blobName);
+        var response = await blob.DownloadStreamingAsync(cancellationToken: ct);
+        logger.LogInformation("Downloaded blob {BlobName} from container {Container}", blobName, containerName);
+        return response.Value.Content;
+    }
+
     public async Task<Uri> GetDownloadUrlAsync(string containerName, string blobName,
         TimeSpan expiry, CancellationToken ct = default)
     {
