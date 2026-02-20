@@ -125,19 +125,28 @@ ddtoolnew/
 
 ## 4. Azure Services Map
 
+> **Full catalogue:** See [`docs/AZURE-SERVICES.md`](./AZURE-SERVICES.md) for the complete per-service reference including SKUs, Bicep resource types, `appsettings` keys, Managed Identity role assignments, cost tips, and local-development fallbacks.
+
 | Service | Purpose | Flexible Alternative |
 |---------|---------|---------------------|
-| **Azure App Service (Linux)** | Host the Web API | Azure Container Apps, AKS |
-| **Azure Functions v4** | Event-driven AI processing | Logic Apps, Durable Functions |
-| **Azure SQL Database** | Relational process data | Cosmos DB, PostgreSQL Flexible Server |
-| **Azure Blob Storage** | Process artifact files | ADLS Gen2 for analytics |
-| **Azure OpenAI** | LLM-powered analysis | Azure AI Studio, custom models |
-| **Azure AD / Entra ID** | Authentication & RBAC | B2C for external users |
-| **Azure Key Vault** | Secrets & certificates | Managed HSM for regulated environments |
-| **Application Insights** | APM, distributed tracing | Azure Monitor, Grafana |
-| **Azure Static Web Apps** | Host HTML/JS frontend | CDN + Blob, Azure Front Door |
+| **Microsoft Entra ID** | Authentication & RBAC (JWT bearer + MSAL.js) | B2C for external users |
+| **Azure Key Vault** | Secrets & certificates (no secrets in code) | Managed HSM for regulated environments |
+| **Azure App Service (Linux)** | Host `BPOPlatform.Api` + SignalR hub | Azure Container Apps, AKS |
+| **Azure Static Web Apps** | Host `BPOPlatform.Web` HTML/JS frontend | CDN + Blob, Azure Front Door |
+| **Azure Functions v4** | Blob-triggered AI pipeline, Durable orchestration | Logic Apps |
+| **Azure SQL Database** | Relational process data (EF Core + Managed Identity) | PostgreSQL Flexible Server, Cosmos DB |
+| **Azure Blob Storage** | Process artifact files + Functions state store | ADLS Gen2 for analytics |
+| **Azure OpenAI** | LLM analysis + document generation (GPT-4o) | Azure AI Foundry, custom models |
+| **Azure AI Document Intelligence** | PDF / image text extraction (`prebuilt-read`) | Custom Form Recognizer model |
+| **Azure AI Speech Services** | Audio transcription (MP3/WAV/M4A interviews) | Azure Video Indexer |
+| **Azure SignalR Service** | Scale real-time notifications (production) | Self-hosted SignalR (single instance) |
+| **Power Automate** | External ticketing (ServiceNow, Jira, ADO) | Azure Logic Apps, custom connector |
+| **Application Insights** | APM, distributed tracing, structured logs | Azure Monitor, Grafana |
+| **Log Analytics Workspace** | Backing store for Application Insights + KQL | — |
+| **Azure Front Door + WAF** | Global LB, DDoS, WAF *(Phase 5)* | Application Gateway |
+| **Azure Virtual Network** | Private endpoints for SQL + Blob *(Phase 5)* | — |
 
-All Azure services are encapsulated behind interfaces – swap any service without touching domain logic.
+All Azure services are encapsulated behind interfaces — swap any service without touching domain logic.
 
 ---
 
