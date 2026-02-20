@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="BPO Process Discovery Platform - Admin Configuration">
+    <title>Admin Config - BPO AI Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="bpo-platform.css">
+    <link rel="stylesheet" href="bootstrap-icons.css">
+    <link rel="stylesheet" href="professional-enhancements.css">
+</head>
+<body class="admin-page">
+    <!-- Header with Navigation -->
+    <header class="platform-header">
+        <div class="header-container">
+            <div class="logo">
+                <img src="images/aura.png" alt="AURA" style="height: 35px; width: auto;">
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="dashboard.html">Home</a></li>
+                    <li><a href="workflow.html">Workflow</a></li>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="admin.html" class="active">Admin</a></li>
+                    <li><a href="#settings">Settings</a></li>
+                </ul>
+            </nav>
+            <div class="user-menu">
+                <span class="user-name">Admin User</span>
+                <button onclick="location.href='login.html'" class="btn btn-sm" style="background: #e31837; border-color: #e31837;">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="platform-layout">
+        <!-- Sidebar -->
+        <aside class="platform-sidebar">
+            <h3>Quick Links</h3>
+            <nav class="sidebar-nav">
+                <a href="workflow.html" class="sidebar-link">
+                    <span class="icon"><i class="bi bi-diagram-3"></i></span>
+                    <span>Workflow Engine</span>
+                </a>
+                <a href="upload.html" class="sidebar-link">
+                    <span class="icon"><i class="bi bi-cloud-upload"></i></span>
+                    <span>Upload Files</span>
+                </a>
+                <a href="analysis.html" class="sidebar-link">
+                    <span class="icon"><i class="bi bi-cpu"></i></span>
+                    <span>AI Analysis</span>
+                </a>
+                <a href="kanban.html" class="sidebar-link">
+                    <span class="icon"><i class="bi bi-kanban"></i></span>
+                    <span>Kanban Board</span>
+                </a>
+                <a href="admin.html" class="sidebar-link active">
+                    <span class="icon"><i class="bi bi-gear"></i></span>
+                    <span>Admin Config</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="platform-main">
+            <div class="page-header">
+                <h1>Admin Configuration</h1>
+                <p>Manage users, Azure services, and integrations</p>
+            </div>
+
+            <!-- Tabs -->
+            <section class="tabs-section">
+                <div class="tabs-container">
+                    <button class="tab-btn active" data-tab="users"><i class="bi bi-people"></i> User Management</button>
+                    <button class="tab-btn" data-tab="azure"><i class="bi bi-cloud"></i> Azure Services</button>
+                    <button class="tab-btn" data-tab="api"><i class="bi bi-key"></i> API & Integrations</button>
+                </div>
+
+                <!-- User Management Tab -->
+                <div class="tab-content active" id="usersTab">
+                    <div class="tab-header">
+                        <h2>User Management</h2>
+                        <button class="btn btn-primary" id="addUserBtn">+ Add User</button>
+                    </div>
+
+                    <div class="users-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Last Login</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>John Doe</td>
+                                    <td>john.doe@company.com</td>
+                                    <td><span class="role-badge admin">Admin</span></td>
+                                    <td><span class="status-badge success">Active</span></td>
+                                    <td>2 hours ago</td>
+                                    <td>
+                                        <button class="btn btn-sm">Edit</button>
+                                        <button class="btn btn-sm btn-danger">Remove</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Jane Smith</td>
+                                    <td>jane.smith@company.com</td>
+                                    <td><span class="role-badge manager">Manager</span></td>
+                                    <td><span class="status-badge success">Active</span></td>
+                                    <td>1 day ago</td>
+                                    <td>
+                                        <button class="btn btn-sm">Edit</button>
+                                        <button class="btn btn-sm btn-danger">Remove</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Bob Johnson</td>
+                                    <td>bob.johnson@company.com</td>
+                                    <td><span class="role-badge analyst">Analyst</span></td>
+                                    <td><span class="status-badge success">Active</span></td>
+                                    <td>3 days ago</td>
+                                    <td>
+                                        <button class="btn btn-sm">Edit</button>
+                                        <button class="btn btn-sm btn-danger">Remove</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Alice Williams</td>
+                                    <td>alice.williams@company.com</td>
+                                    <td><span class="role-badge viewer">Viewer</span></td>
+                                    <td><span class="status-badge warning">Inactive</span></td>
+                                    <td>2 weeks ago</td>
+                                    <td>
+                                        <button class="btn btn-sm">Edit</button>
+                                        <button class="btn btn-sm btn-danger">Remove</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="add-user-form" id="addUserForm" style="display: none;">
+                        <h3>Add New User</h3>
+                        <form>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Full Name</label>
+                                    <input type="text" class="form-control" placeholder="Enter full name">
+                                </div>
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" class="form-control" placeholder="Enter email">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Role</label>
+                                    <select class="form-control">
+                                        <option>Admin</option>
+                                        <option>Manager</option>
+                                        <option>Analyst</option>
+                                        <option>Viewer</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Department</label>
+                                    <input type="text" class="form-control" placeholder="Enter department">
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Add User</button>
+                                <button type="button" class="btn btn-secondary" id="cancelAddUser">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Azure Services Tab -->
+                <div class="tab-content" id="azureTab">
+                    <div class="tab-header">
+                        <h2>Azure Service Configuration</h2>
+                        <button class="btn btn-primary">Test Connection</button>
+                    </div>
+
+                    <div class="config-sections">
+                        <!-- Blob Storage -->
+                        <div class="config-card">
+                            <div class="config-header">
+                                <h3><i class="bi bi-cloud"></i> Azure Blob Storage</h3>
+                                <span class="status-indicator connected">Connected</span>
+                            </div>
+                            <form class="config-form">
+                                <div class="form-group">
+                                    <label>Storage Account Name</label>
+                                    <input type="text" class="form-control" value="bpoplatformstorage" placeholder="Enter storage account name">
+                                </div>
+                                <div class="form-group">
+                                    <label>Connection String</label>
+                                    <input type="password" class="form-control" value="••••••••••••••••••••" placeholder="Enter connection string">
+                                </div>
+                                <div class="form-group">
+                                    <label>Container Name</label>
+                                    <input type="text" class="form-control" value="process-artifacts" placeholder="Enter container name">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Save Configuration</button>
+                            </form>
+                        </div>
+
+                        <!-- Azure SQL -->
+                        <div class="config-card">
+                            <div class="config-header">
+                                <h3>🗄️ Azure SQL Database</h3>
+                                <span class="status-indicator connected">Connected</span>
+                            </div>
+                            <form class="config-form">
+                                <div class="form-group">
+                                    <label>Server Name</label>
+                                    <input type="text" class="form-control" value="bpoplatform-sql.database.windows.net" placeholder="Enter server name">
+                                </div>
+                                <div class="form-group">
+                                    <label>Database Name</label>
+                                    <input type="text" class="form-control" value="BPOPlatformDB" placeholder="Enter database name">
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Username</label>
+                                        <input type="text" class="form-control" value="sqladmin" placeholder="Enter username">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Password</label>
+                                        <input type="password" class="form-control" value="••••••••••••" placeholder="Enter password">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Save Configuration</button>
+                            </form>
+                        </div>
+
+                        <!-- Azure Functions -->
+                        <div class="config-card">
+                            <div class="config-header">
+                                <h3>⚡ Azure Functions</h3>
+                                <span class="status-indicator connected">Connected</span>
+                            </div>
+                            <form class="config-form">
+                                <div class="form-group">
+                                    <label>Function App Name</label>
+                                    <input type="text" class="form-control" value="bpoplatform-functions" placeholder="Enter function app name">
+                                </div>
+                                <div class="form-group">
+                                    <label>Function Key</label>
+                                    <input type="password" class="form-control" value="••••••••••••••••••••" placeholder="Enter function key">
+                                </div>
+                                <div class="form-group">
+                                    <label>Runtime Version</label>
+                                    <select class="form-control">
+                                        <option>Python 3.11</option>
+                                        <option>Node.js 18</option>
+                                        <option>.NET 7</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Save Configuration</button>
+                            </form>
+                        </div>
+
+                        <!-- Power Automate -->
+                        <div class="config-card">
+                            <div class="config-header">
+                                <h3>🔄 Power Automate</h3>
+                                <span class="status-indicator disconnected">Not Connected</span>
+                            </div>
+                            <form class="config-form">
+                                <div class="form-group">
+                                    <label>Environment ID</label>
+                                    <input type="text" class="form-control" placeholder="Enter environment ID">
+                                </div>
+                                <div class="form-group">
+                                    <label>Tenant ID</label>
+                                    <input type="text" class="form-control" placeholder="Enter tenant ID">
+                                </div>
+                                <div class="form-group">
+                                    <label>Client ID</label>
+                                    <input type="text" class="form-control" placeholder="Enter client ID">
+                                </div>
+                                <div class="form-group">
+                                    <label>Client Secret</label>
+                                    <input type="password" class="form-control" placeholder="Enter client secret">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Connect & Save</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- API & Integrations Tab -->
+                <div class="tab-content" id="apiTab">
+                    <div class="tab-header">
+                        <h2>API Keys & Integration Settings</h2>
+                        <button class="btn btn-primary">Generate New Key</button>
+                    </div>
+
+                    <div class="api-keys-section">
+                        <h3>Active API Keys</h3>
+                        <div class="api-keys-list">
+                            <div class="api-key-item">
+                                <div class="api-key-info">
+                                    <h4>Production API Key</h4>
+                                    <code>pk_live_••••••••••••••••••••5a3b</code>
+                                    <p>Created: Jan 15, 2026 • Last used: 2 hours ago</p>
+                                </div>
+                                <div class="api-key-actions">
+                                    <button class="btn btn-sm">Regenerate</button>
+                                    <button class="btn btn-sm btn-danger">Revoke</button>
+                                </div>
+                            </div>
+                            <div class="api-key-item">
+                                <div class="api-key-info">
+                                    <h4>Development API Key</h4>
+                                    <code>pk_test_••••••••••••••••••••9f2c</code>
+                                    <p>Created: Jan 10, 2026 • Last used: Yesterday</p>
+                                </div>
+                                <div class="api-key-actions">
+                                    <button class="btn btn-sm">Regenerate</button>
+                                    <button class="btn btn-sm btn-danger">Revoke</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="integrations-section">
+                        <h3>External Integrations</h3>
+                        <div class="integrations-grid">
+                            <div class="integration-card connected">
+                                <div class="integration-icon">🔗</div>
+                                <h4>Slack</h4>
+                                <p>Workspace: BPO Team</p>
+                                <span class="status-badge success">Connected</span>
+                                <button class="btn btn-sm">Configure</button>
+                            </div>
+                            <div class="integration-card connected">
+                                <div class="integration-icon">📧</div>
+                                <h4>Microsoft Teams</h4>
+                                <p>Team: Process Discovery</p>
+                                <span class="status-badge success">Connected</span>
+                                <button class="btn btn-sm">Configure</button>
+                            </div>
+                            <div class="integration-card">
+                                <div class="integration-icon">📊</div>
+                                <h4>Power BI</h4>
+                                <p>Not configured</p>
+                                <span class="status-badge warning">Disconnected</span>
+                                <button class="btn btn-sm">Connect</button>
+                            </div>
+                            <div class="integration-card">
+                                <div class="integration-icon">🔔</div>
+                                <h4>ServiceNow</h4>
+                                <p>Not configured</p>
+                                <span class="status-badge warning">Disconnected</span>
+                                <button class="btn btn-sm">Connect</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="webhook-section">
+                        <h3>Webhooks</h3>
+                        <div class="webhook-list">
+                            <div class="webhook-item">
+                                <div class="webhook-info">
+                                    <h4>Process Completion Webhook</h4>
+                                    <code>https://api.company.com/webhooks/process-complete</code>
+                                    <div class="webhook-events">
+                                        <span class="event-tag">process.completed</span>
+                                        <span class="event-tag">process.failed</span>
+                                    </div>
+                                </div>
+                                <div class="webhook-actions">
+                                    <button class="btn btn-sm">Edit</button>
+                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                </div>
+                            </div>
+                            <div class="webhook-item">
+                                <div class="webhook-info">
+                                    <h4>File Upload Notification</h4>
+                                    <code>https://api.company.com/webhooks/file-upload</code>
+                                    <div class="webhook-events">
+                                        <span class="event-tag">file.uploaded</span>
+                                        <span class="event-tag">file.analyzed</span>
+                                    </div>
+                                </div>
+                                <div class="webhook-actions">
+                                    <button class="btn btn-sm">Edit</button>
+                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary">+ Add Webhook</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="bpo-platform.js"></script>
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="BPO Process Discovery Platform - Upload Module">
+    <title>Upload - BPO AI Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="bpo-platform.css">
+    <link rel="stylesheet" href="bootstrap-icons.css">
+    <link rel="stylesheet" href="professional-enhancements.css">
+</head>
+<body class="upload-page">
+    <!-- Header with Navigation -->
+    <header class="platform-header">
+        <div class="header-container">
+            <div class="logo">
+                <img src="images/aura.png" alt="AURA" style="height: 35px; width: auto;">
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="dashboard.html">Home</a></li>
+                    <li><a href="workflow.html">Workflow</a></li>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="admin.html">Admin</a></li>
+                    <li><a href="#settings">Settings</a></li>
+                </ul>
+            </nav>
+            <div class="user-menu">
+                <span class="user-name">John Doe</span>
+                <button onclick="location.href='login.html'" class="btn btn-sm" style="background: #e31837; border-color: #e31837;">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="platform-layout">
+        <!-- Sidebar -->
+        <aside class="platform-sidebar">
+            <h3>Quick Links</h3>
+            <nav class="sidebar-nav">
+                <a href="workflow.html" class="sidebar-link">
+                    <span class="icon"><i class="bi bi-diagram-3"></i></span>
+                    <span>Workflow Engine</span>
+                </a>
+                <a href="upload.html" class="sidebar-link active">
+                    <span class="icon"><i class="bi bi-cloud-upload"></i></span>
+                    <span>Upload Files</span>
+                </a>
+                <a href="analysis.html" class="sidebar-link">
+                    <span class="icon"><i class="bi bi-cpu"></i></span>
+                    <span>AI Analysis</span>
+                </a>
+                <a href="kanban.html" class="sidebar-link">
+                    <span class="icon"><i class="bi bi-kanban"></i></span>
+                    <span>Kanban Board</span>
+                </a>
+                <a href="admin.html" class="sidebar-link">
+                    <span class="icon"><i class="bi bi-gear"></i></span>
+                    <span>Admin Config</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="platform-main">
+            <div class="page-header">
+                <h1>Upload Module</h1>
+                <p>Upload process artifacts for AI analysis</p>
+            </div>
+
+            <!-- Upload Categories -->
+            <section class="upload-categories">
+                <div class="category-tabs">
+                    <button class="category-tab active" data-category="all">All Files</button>
+                    <button class="category-tab" data-category="video">📹 Videos</button>
+                    <button class="category-tab" data-category="pdf">📄 PDFs</button>
+                    <button class="category-tab" data-category="audio">🎵 Call Recordings</button>
+                    <button class="category-tab" data-category="text">📝 Transcriptions</button>
+                </div>
+            </section>
+
+            <!-- Drag and Drop Zone -->
+            <section class="upload-section">
+                <div class="upload-zone" id="uploadZone">
+                    <div class="upload-icon">📤</div>
+                    <h3>Drag & Drop Files Here</h3>
+                    <p>or click to browse</p>
+                    <p class="upload-info">Supported formats: MP4, PDF, MP3, WAV, TXT, DOCX (Max 500MB)</p>
+                    <input type="file" id="fileInput" multiple hidden>
+                    <button class="btn btn-primary" id="browseBtn">Browse Files</button>
+                </div>
+            </section>
+
+            <!-- File List -->
+            <section class="files-section">
+                <div class="files-header">
+                    <h2>Uploaded Files</h2>
+                    <div class="files-actions">
+                        <button class="btn btn-sm">Select All</button>
+                        <button class="btn btn-sm">Delete Selected</button>
+                        <button class="btn btn-primary">Analyze All</button>
+                    </div>
+                </div>
+
+                <div class="files-list">
+                    <div class="file-item uploaded">
+                        <div class="file-icon"><i class="bi bi-camera-video"></i></div>
+                        <div class="file-info">
+                            <h4>customer_service_training.mp4</h4>
+                            <p>Video • 125 MB • Uploaded 2 hours ago</p>
+                        </div>
+                        <div class="file-status">
+                            <span class="status-badge success">✅ Analyzed</span>
+                            <div class="file-actions">
+                                <button class="btn btn-sm">View</button>
+                                <button class="btn btn-sm">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="file-item uploaded">
+                        <div class="file-icon"><i class="bi bi-file-earmark-pdf"></i></div>
+                        <div class="file-info">
+                            <h4>process_documentation.pdf</h4>
+                            <p>PDF • 3.2 MB • Uploaded 3 hours ago</p>
+                        </div>
+                        <div class="file-status">
+                            <span class="status-badge success">✅ Analyzed</span>
+                            <div class="file-actions">
+                                <button class="btn btn-sm">View</button>
+                                <button class="btn btn-sm">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="file-item uploading">
+                        <div class="file-icon"><i class="bi bi-file-earmark-music"></i></div>
+                        <div class="file-info">
+                            <h4>call_recording_001.mp3</h4>
+                            <p>Audio • 45 MB • Uploading...</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 67%"></div>
+                            </div>
+                        </div>
+                        <div class="file-status">
+                            <span class="status-badge warning">🔄 67%</span>
+                            <div class="file-actions">
+                                <button class="btn btn-sm">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="file-item pending">
+                        <div class="file-icon"><i class="bi bi-pencil-square"></i></div>
+                        <div class="file-info">
+                            <h4>call_transcription_001.txt</h4>
+                            <p>Text • 128 KB • Uploaded 1 hour ago</p>
+                        </div>
+                        <div class="file-status">
+                            <span class="status-badge info">⏳ Pending</span>
+                            <div class="file-actions">
+                                <button class="btn btn-sm">Analyze</button>
+                                <button class="btn btn-sm">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="file-item error">
+                        <div class="file-icon"><i class="bi bi-file-earmark-pdf"></i></div>
+                        <div class="file-info">
+                            <h4>incomplete_document.pdf</h4>
+                            <p>PDF • 1.8 MB • Uploaded 5 hours ago</p>
+                        </div>
+                        <div class="file-status">
+                            <span class="status-badge error">❌ Missing Info</span>
+                            <div class="file-actions">
+                                <button class="btn btn-sm">Fix</button>
+                                <button class="btn btn-sm">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="file-item uploaded">
+                        <div class="file-icon"><i class="bi bi-camera-video"></i></div>
+                        <div class="file-info">
+                            <h4>onboarding_process.mp4</h4>
+                            <p>Video • 210 MB • Uploaded yesterday</p>
+                        </div>
+                        <div class="file-status">
+                            <span class="status-badge success">✅ Analyzed</span>
+                            <div class="file-actions">
+                                <button class="btn btn-sm">View</button>
+                                <button class="btn btn-sm">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Storage Info -->
+            <section class="storage-section">
+                <div class="storage-card">
+                    <h3>Storage Usage</h3>
+                    <div class="storage-bar">
+                        <div class="storage-used" style="width: 64%"></div>
+                    </div>
+                    <p>6.4 GB of 10 GB used</p>
+                </div>
+
+                <div class="storage-card">
+                    <h3>Files by Type</h3>
+                    <div class="storage-breakdown">
+                        <div class="breakdown-item">
+                            <span>Videos</span>
+                            <span>3.2 GB (50%)</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span>PDFs</span>
+                            <span>2.1 GB (33%)</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span>Audio</span>
+                            <span>0.8 GB (12%)</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span>Text</span>
+                            <span>0.3 GB (5%)</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="bpo-platform.js"></script>
+</body>
+</html>

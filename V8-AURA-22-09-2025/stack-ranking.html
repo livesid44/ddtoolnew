@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>default</title>
+    <link href="css/bootstrap.css" rel="stylesheet" />
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="js/jquery.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/custom.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
+
+    <script
+    type="text/javascript"
+    src="https://www.gstatic.com/charts/loader.js"
+  ></script>
+
+  <script type="text/javascript">
+    google.charts.load("current", { packages: ["corechart", 'bar'] });
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+      var data = google.visualization.arrayToDataTable([
+        ["Year", "Sales", "Expenses"],
+        ["2004", 1000, 400],
+        ["2005", 1170, 460],
+        ["2006", 660, 1120],
+        ["2007", 1030, 540],
+      ]);
+
+      var options = {  chartArea: {
+        height: '100%',
+        width: '100%',
+        top: 32,
+        left: 32,
+        bottom: 32,
+        right: 16
+      },
+    
+      height: '100%',
+      width: '100%',
+      legend: {
+        position: 'bottom'
+      },
+        curveType: "function",
+        
+      };
+
+      var chart = new google.visualization.LineChart(
+        document.getElementById("curve_chart")
+      );
+
+      chart.draw(data, options);
+    }
+ 
+    google.load('visualization', '1', {
+    packages: ['corechart']
+});
+google.setOnLoadCallback(draw);
+
+function draw() {
+    var data = new google.visualization.arrayToDataTable([
+        ['Percentage', '',{ role: 'style' }],
+        ['01/07/2024', 51.43,'#fed5d7'],
+        ['02/07/2024', 60.00,'#ffdfb9'],
+        ['03/07/2024', 66.67,'#e9c9c0'],
+        ['04/07/2024 ', 60.00,'#ffb6a4'],
+        ['05/07/2024', 66.67,'#ffd098'],
+        ['06/07/2024', 100.00,'#f2f2f2'],
+        ['07/07/2024', 100.00,'#ffa4b9'],
+        ['08/07/2024', 100.00,'#ffe1e6'],
+      
+    ]);
+
+    var options = {  chartArea: {
+        height: '100%',
+        width: '100%',
+        top: 32,
+        left: 32,
+        bottom: 32,
+        right: 16
+      },
+    
+    
+      legend: {
+        position: 'bottom'
+      },
+        curveType: "function",
+        
+      };
+
+    var chart = new google.visualization.ColumnChart(document.getElementById('quality_div'));
+    chart.draw(data, {
+        legend:{position:'none'},
+     
+        is3D: true,
+        axisFontSize: 12,
+      
+    });
+}
+
+
+google.charts.load('current', {
+  packages: ['corechart']
+}).then(drawBasic);
+
+function drawBasic() {
+  var dataTable = new google.visualization.DataTable();
+  dataTable.addColumn('timeofday', 'Time of Day');
+  dataTable.addColumn('number', 'Motivation Level');
+
+  dataTable.addRows([
+    [{v: [8, 0, 0], f: '8 am'}, 46],
+    [{v: [9, 0, 0], f: '9 am'}, 46],
+    [{v: [10, 0, 0], f:'10 am'}, 34],
+    [{v: [11, 0, 0], f: '11 am'}, 4],
+    [{v: [12, 0, 0], f: '12 pm'}, 5],
+    [{v: [13, 0, 0], f: '1 pm'}, 6],
+    [{v: [14, 0, 0], f: '2 pm'}, 7],
+    [{v: [15, 0, 0], f: '3 pm'}, 8],
+    [{v: [16, 0, 0], f: '4 pm'}, 9],
+    [{v: [17, 0, 0], f: '5 pm'}, 10],
+  ]);
+
+  var options = {
+    title: 'Motivation Level Throughout the Day',
+    hAxis: {
+      title: 'Time of Day',
+      format: 'h:mm a',
+      viewWindow: {
+        min: [7, 30, 0],
+        max: [17, 30, 0]
+      }
+    },
+    vAxis: {
+      title: 'Rating (scale of 1-10)'
+    },
+    tooltip: {isHtml: true},
+    colors: ['#fed5d7', '#ffdfb9', '#e9c9c0'],
+    legend: {
+      position: 'none'
+    }
+  };
+
+  // create view with tooltip columns for each series
+  var viewColumns = [0];
+  var dataView = new google.visualization.DataView(dataTable);
+  $.each(new Array(dataTable.getNumberOfColumns()), function (index) {
+    // ignore x-axis column
+    if (index === 0) {
+      return;
+    }
+
+    // add series column
+    viewColumns.push(index);
+
+    // add tooltip column - column role should directly follow the series it represents
+    viewColumns.push({
+      calc: function (dt, row) {
+        // build tooltip
+        var tooltip = '<div class="ggl-tooltip"><div><span>';
+        tooltip += dt.getFormattedValue(row, 0) + '</span></div>';
+        tooltip += '<div>' + dt.getColumnLabel(index) + ':&nbsp;';
+        tooltip += '<span>' + dt.getFormattedValue(row, index) + '</span></div>';
+        tooltip += '<div>Add whatever you want for column: ' + index + ', row: ' + row + '</div></div>';
+
+        return tooltip;
+      },
+      p: {html: true},
+      role: 'tooltip',
+      type: 'string'
+    });
+
+    // add style column for color
+    viewColumns.push({
+      calc: function (dt, row) {
+        // get color based on row index
+        return options.colors[row];
+      },
+      role: 'style',
+      type: 'string'
+    });
+  });
+  dataView.setColumns(viewColumns);
+
+  var chart = new google.visualization.ColumnChart(document.getElementById('chart'));
+  chart.draw(dataView.toDataTable(), options);
+}
+    </script>
+  </head>
+  <body>
+
+    
+    <nav class="navbar navbar-expand-sm">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="leadership.html">
+          <img class="micro-logo" src="images/aura.png" />
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#mynavbar"
+        >
+          <span class="navbar-toggler-icon"><i class="bi bi-list"></i></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mynavbar">
+          <label class="logo me-auto"></label>
+          <form class="d-flex">
+            <div class="dropdown">
+              <button
+                type="button"
+                class="btn username dropdown-toggle"
+                data-bs-toggle="dropdown"
+              >
+                <img class="user-pic" src="images/user-pic.png" />Mohammad Ameer
+                Shaikh
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Link 1</a></li>
+                <li><a class="dropdown-item" href="#">Link 2</a></li>
+                <li><a class="dropdown-item" href="#">Link 3</a></li>
+              </ul>
+            </div>
+            <i class="bi bi-bell-fill mt"></i>
+          </form>
+        </div>
+      </div>
+    </nav>
+
+    <div class="aura">
+    <div class="sideNav">
+      <div class="clearfix">
+        <a href="javascript: void(0);" class="toggleMenuLink">
+          <span></span>
+        </a>
+      </div>
+      <ul class="list-unstyled">
+      
+        <li class="dropdown">
+          <a  href="javascript: void(0);"><img src="images/menuIcons/11.png" alt="" /><img src="images/menuIcons/11-red.png" alt="" /> <span>Dashboard</a></span>
+          <ul class="subMenu">
+            <li><a href="#">Submenu 1</a></li>
+            <li><a href="#">Submenu 2</a></li>
+            <li><a href="#">Submenu 3</a></li>
+          </ul>
+        </li>
+       
+        
+      </ul>
+    </div>
+
+
+    <div class="container-fluid">
+      <div class="clear-20"></div>
+
+      <div class="row">
+      <div class="col-md-8">
+
+        <div class="row">
+          <div class="col-md-1"></div>
+          <div class="col-md-3">
+            <div class="circle-wrapper">            
+              <div class="circle-text"> Stack <br> Ranking # </div>
+            <div class="circle-rank">33</div>
+            <div class="clear"></div>
+          </div>
+        </div>
+          <div class="col-md-3">
+            <div class="input-group-wrapper title-stack-ranking ">
+              <div class="input-group-wapper-color1 p-2">
+                <p >Average Training Score</p>
+                <h5>12.34</h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+
+            <div class="input-group-wrapper title-stack-ranking ">
+              <div class="input-group-wapper-color2 p-2">
+                <p >Average Quality Score</p>
+                <h5>12.34</h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-1"></div>
+        </div>
+
+        <div class="white-bg">
+          <div class="row">
+           
+
+            <div class="col-md-3">
+              <div class="input-group-wrapper ">
+                <div class="input-group-wapper-color1">
+                <div class="text-input-group ">Number Audits</div>
+                <div class="number-input-group ">32</div> 
+                <div class="clear"></div>
+              </div>
+              </div>
+            </div>
+
+
+            <div class="col-md-3">
+              <div class="input-group-wrapper ">
+                <div class="input-group-wapper-color2">
+                <div class="text-input-group ">CQ</div>
+                <div class="number-input-group ">24</div> 
+                <div class="clear"></div>
+              </div>
+              </div>
+            </div>
+
+
+            <div class="col-md-3">
+              <div class="input-group-wrapper ">
+                <div class="input-group-wapper-color3">
+                <div class="text-input-group ">Number of Fatal FE%</div>
+                <div class="number-input-group ">44</div> 
+                <div class="clear"></div>
+              </div>
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="input-group-wrapper ">
+                <div class="input-group-wapper-color4">
+                <div class="text-input-group ">Pending Feedbacks</div>
+                <div class="number-input-group ">14</div> 
+                <div class="clear"></div>
+              </div>
+              </div>
+            </div>
+
+
+            <div class="col-md-3">
+              <div class="input-group-wrapper ">
+                <div class="input-group-wapper-color5">
+                <div class="text-input-group ">Training Assigned</div>
+                <div class="number-input-group ">10</div> 
+                <div class="clear"></div>
+              </div>
+              </div>
+            </div>
+
+
+            <div class="col-md-3">
+              <div class="input-group-wrapper ">
+                <div class="input-group-wapper-color6">
+                <div class="text-input-group ">Pending Training </div>
+                <div class="number-input-group ">16</div> 
+                <div class="clear"></div>
+              </div>
+              </div>
+            </div>
+
+
+            <div class="col-md-3">
+              <div class="input-group-wrapper ">
+                <div class="input-group-wapper-color7">
+                <div class="text-input-group ">Average Score</div>
+                <div class="number-input-group ">53</div> 
+                <div class="clear"></div>
+              </div>
+              </div>
+            </div>
+
+
+            <div class="col-md-3">
+              <div class="input-group-wrapper ">
+                <div class="input-group-wapper-color8">
+                <div class="text-input-group ">Number of failed PKT </div>
+                <div class="number-input-group ">66</div> 
+                <div class="clear"></div>
+              </div>
+              </div>
+            </div>
+
+
+            
+<div class="clear-10"></div>
+            <hr>
+<div class="clear-10"></div>
+            
+<div class="col-md-6 mb-4">
+  <div class="white-bg"> <p><b>Quality Analytics</b></p>  <div id="quality_div"></div></div>
+</div>
+
+
+<div class="col-md-6 mb-4"> <div class="white-bg">
+  <p><b>Daily Page Hits</b></p>
+  <div
+  id="curve_chart"></div>
+</div>
+
+
+</div>
+
+<div class="col-md-6 mb-4"> <div class="white-bg">
+  <p><b>Parameter Analysis</b></p>
+  <div class="chart" id="chart"></div>
+</div>
+
+
+</div>
+
+
+<div class="col-md-6"> <div class="white-bg">
+  <p><b>Parameter</b></p>
+ 
+  <div class="table-responsive">
+    <table class="table table-straped">
+      <tr>
+        <th>Parameter</th>
+        <th>Weightage</th>
+        <th>Score </th>
+      </tr>
+      <tr>
+        <td>Parameter 1</td>
+        <td>20%</td>
+        <td>20%</td>
+      </tr>
+
+      <tr>
+        <td>Parameter 1</td>
+        <td>20%</td>
+        <td>20%</td>
+      </tr>
+
+
+      <tr>
+        <td>Parameter 1</td>
+        <td>20%</td>
+        <td>20%</td>
+      </tr>
+
+
+      <tr>
+        <td>Parameter 1</td>
+        <td>20%</td>
+        <td>20%</td>
+      </tr>
+
+    </table>
+  </div>
+
+</div>
+
+
+</div>
+
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="marque-wrapper">
+          <div class="title-marque">Update</div>
+          <div class="marquee-body">
+        <p>12/06/2024</p>
+          <div class="white-bg">
+            It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. 
+
+        </div>
+        <div class="clear-10"></div>
+
+        <p>12/06/2024</p>
+        <div class="white-bg">
+          It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. 
+
+      </div>
+      <div class="clear-10"></div>
+
+      <p>12/06/2024</p>
+        <div class="white-bg">
+          It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. 
+
+      </div>
+      <div class="clear-10"></div>
+
+
+      <p>12/06/2024</p>
+        <div class="white-bg">
+          It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. 
+
+      </div>
+      <div class="clear-10"></div>
+
+
+      <p>12/06/2024</p>
+        <div class="white-bg">
+          It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. 
+
+      </div>
+      <div class="clear-10"></div>
+
+
+      <p>12/06/2024</p>
+        <div class="white-bg">
+          It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. 
+
+      </div>
+      <div class="clear-10"></div>
+      </div>
+    </div>
+      </div>
+</div>
+
+    
+
+    </div>
+  </div>
+  </body>
+</html>

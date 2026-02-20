@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="BPO Process Discovery Platform - AI Analysis">
+    <title>AI Analysis - BPO AI Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="bpo-platform.css">
+    <link rel="stylesheet" href="bootstrap-icons.css">
+    <link rel="stylesheet" href="professional-enhancements.css">
+</head>
+<body class="analysis-page">
+    <!-- Header with Navigation -->
+    <header class="platform-header">
+        <div class="header-container">
+            <div class="logo">
+                <img src="images/aura.png" alt="AURA" style="height: 35px; width: auto;">
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="dashboard.html">Home</a></li>
+                    <li><a href="workflow.html">Workflow</a></li>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="admin.html">Admin</a></li>
+                    <li><a href="#settings">Settings</a></li>
+                </ul>
+            </nav>
+            <div class="user-menu">
+                <span class="user-name">John Doe</span>
+                <button onclick="location.href='login.html'" class="btn btn-sm" style="background: #e31837; border-color: #e31837;">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="platform-layout">
+        <!-- Sidebar -->
+        <aside class="platform-sidebar">
+            <h3>Quick Links</h3>
+            <nav class="sidebar-nav">
+                <a href="workflow.html" class="sidebar-link">
+                    <span class="icon"><i class="bi bi-diagram-3"></i></span>
+                    <span>Workflow Engine</span>
+                </a>
+                <a href="upload.html" class="sidebar-link">
+                    <span class="icon"><i class="bi bi-cloud-upload"></i></span>
+                    <span>Upload Files</span>
+                </a>
+                <a href="analysis.html" class="sidebar-link active">
+                    <span class="icon"><i class="bi bi-cpu"></i></span>
+                    <span>AI Analysis</span>
+                </a>
+                <a href="kanban.html" class="sidebar-link">
+                    <span class="icon"><i class="bi bi-kanban"></i></span>
+                    <span>Kanban Board</span>
+                </a>
+                <a href="admin.html" class="sidebar-link">
+                    <span class="icon"><i class="bi bi-gear"></i></span>
+                    <span>Admin Config</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="platform-main">
+            <div class="page-header">
+                <h1>AI Analysis Dashboard</h1>
+                <p>LLM-powered process discovery and validation</p>
+            </div>
+
+            <!-- Analysis Status -->
+            <section class="analysis-status-section">
+                <div class="status-cards">
+                    <div class="status-card">
+                        <div class="status-icon"><i class="bi bi-check-circle-fill"></i></div>
+                        <h3>Complete</h3>
+                        <div class="status-count">12</div>
+                    </div>
+                    <div class="status-card warning">
+                        <div class="status-icon">⚠️</div>
+                        <h3>Missing Elements</h3>
+                        <div class="status-count">3</div>
+                    </div>
+                    <div class="status-card info">
+                        <div class="status-icon"><i class="bi bi-arrow-repeat"></i></div>
+                        <h3>In Progress</h3>
+                        <div class="status-count">5</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- LLM Suggestions -->
+            <section class="suggestions-section">
+                <div class="section-header">
+                    <h2>🤖 LLM Suggestions & Insights</h2>
+                    <button class="btn btn-sm">Refresh Analysis</button>
+                </div>
+
+                <div class="suggestion-card">
+                    <div class="suggestion-header">
+                        <h3>Process: Customer Service Call Handling</h3>
+                        <span class="confidence-badge high">95% Confidence</span>
+                    </div>
+                    <div class="suggestion-content">
+                        <h4>Key Insights:</h4>
+                        <ul class="insights-list">
+                            <li>✅ Process has 7 distinct steps identified</li>
+                            <li>✅ Average handling time: 4.2 minutes</li>
+                            <li>✅ Compliance requirements met</li>
+                            <li>⚠️ Step 4 shows 23% variation - suggests improvement opportunity</li>
+                        </ul>
+
+                        <h4>Recommendations:</h4>
+                        <div class="recommendations">
+                            <div class="recommendation-item">
+                                <span class="rec-icon"><i class="bi bi-lightbulb"></i></span>
+                                <p>Standardize step 4 with additional training materials</p>
+                            </div>
+                            <div class="recommendation-item">
+                                <span class="rec-icon">🎯</span>
+                                <p>Implement automated validation for data entry in step 3</p>
+                            </div>
+                            <div class="recommendation-item">
+                                <span class="rec-icon"><i class="bi bi-bar-chart"></i></span>
+                                <p>Add quality checkpoints after steps 2 and 5</p>
+                            </div>
+                        </div>
+
+                        <div class="suggestion-actions">
+                            <button class="btn btn-primary">Accept Suggestions</button>
+                            <button class="btn btn-secondary">Provide Feedback</button>
+                            <button class="btn btn-secondary">View Details</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="suggestion-card">
+                    <div class="suggestion-header">
+                        <h3>Process: Employee Onboarding</h3>
+                        <span class="confidence-badge medium">78% Confidence</span>
+                    </div>
+                    <div class="suggestion-content">
+                        <h4>Key Insights:</h4>
+                        <ul class="insights-list">
+                            <li>✅ 12 steps identified in onboarding workflow</li>
+                            <li>⚠️ Missing documentation for steps 8-9</li>
+                            <li>⚠️ Inconsistent timing between departments</li>
+                            <li>✅ Compliance status: Passed</li>
+                        </ul>
+
+                        <h4>Required Actions:</h4>
+                        <div class="recommendations">
+                            <div class="recommendation-item priority">
+                                <span class="rec-icon">🔴</span>
+                                <p>Upload documentation for steps 8-9 to complete analysis</p>
+                            </div>
+                            <div class="recommendation-item">
+                                <span class="rec-icon"><i class="bi bi-pencil-square"></i></span>
+                                <p>Standardize timing expectations across departments</p>
+                            </div>
+                        </div>
+
+                        <div class="suggestion-actions">
+                            <button class="btn btn-warning">Upload Missing Docs</button>
+                            <button class="btn btn-secondary">Provide Feedback</button>
+                            <button class="btn btn-secondary">View Details</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Validation Status -->
+            <section class="validation-section">
+                <h2>Validation Status</h2>
+                <div class="validation-grid">
+                    <div class="validation-card complete">
+                        <div class="validation-header">
+                            <h3>Customer Service Call Handling</h3>
+                            <span class="validation-badge">✅ Complete</span>
+                        </div>
+                        <div class="validation-details">
+                            <div class="detail-row">
+                                <span>Steps Identified:</span>
+                                <span>7/7</span>
+                            </div>
+                            <div class="detail-row">
+                                <span>Documentation:</span>
+                                <span>Complete</span>
+                            </div>
+                            <div class="detail-row">
+                                <span>Compliance:</span>
+                                <span>Passed</span>
+                            </div>
+                            <div class="detail-row">
+                                <span>Quality Score:</span>
+                                <span>95/100</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="validation-card incomplete">
+                        <div class="validation-header">
+                            <h3>Employee Onboarding</h3>
+                            <span class="validation-badge">⚠️ Missing Elements</span>
+                        </div>
+                        <div class="validation-details">
+                            <div class="detail-row">
+                                <span>Steps Identified:</span>
+                                <span>10/12</span>
+                            </div>
+                            <div class="detail-row">
+                                <span>Documentation:</span>
+                                <span class="missing">Incomplete</span>
+                            </div>
+                            <div class="detail-row">
+                                <span>Compliance:</span>
+                                <span>Passed</span>
+                            </div>
+                            <div class="detail-row">
+                                <span>Quality Score:</span>
+                                <span>78/100</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="validation-card in-progress">
+                        <div class="validation-header">
+                            <h3>Invoice Processing</h3>
+                            <span class="validation-badge">🔄 In Progress</span>
+                        </div>
+                        <div class="validation-details">
+                            <div class="detail-row">
+                                <span>Steps Identified:</span>
+                                <span>5/9</span>
+                            </div>
+                            <div class="detail-row">
+                                <span>Documentation:</span>
+                                <span class="processing">Processing</span>
+                            </div>
+                            <div class="detail-row">
+                                <span>Compliance:</span>
+                                <span>Pending</span>
+                            </div>
+                            <div class="detail-row">
+                                <span>Quality Score:</span>
+                                <span>--/100</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Feedback Loop -->
+            <section class="feedback-section">
+                <h2>Feedback Loop to Workflow Engine</h2>
+                <div class="feedback-container">
+                    <div class="feedback-card">
+                        <h3>Send to Workflow Engine</h3>
+                        <p>Provide feedback to improve AI analysis and workflow automation</p>
+                        
+                        <form class="feedback-form">
+                            <div class="form-group">
+                                <label>Select Process</label>
+                                <select class="form-control">
+                                    <option>Customer Service Call Handling</option>
+                                    <option>Employee Onboarding</option>
+                                    <option>Invoice Processing</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Feedback Type</label>
+                                <select class="form-control">
+                                    <option>Approve Analysis</option>
+                                    <option>Request Revision</option>
+                                    <option>Flag Issue</option>
+                                    <option>Add Comment</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Comments</label>
+                                <textarea class="form-control" rows="4" placeholder="Add your feedback here..."></textarea>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Submit Feedback</button>
+                                <button type="button" class="btn btn-secondary">Save Draft</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="feedback-history">
+                        <h3>Recent Feedback</h3>
+                        <div class="feedback-item">
+                            <div class="feedback-header">
+                                <span class="feedback-type">✅ Approved</span>
+                                <span class="feedback-time">2 hours ago</span>
+                            </div>
+                            <p><strong>Customer Service Call Handling</strong></p>
+                            <p>Analysis approved with minor suggestions for step 4 optimization.</p>
+                        </div>
+                        <div class="feedback-item">
+                            <div class="feedback-header">
+                                <span class="feedback-type">📝 Comment</span>
+                                <span class="feedback-time">Yesterday</span>
+                            </div>
+                            <p><strong>Employee Onboarding</strong></p>
+                            <p>Requested additional documentation for steps 8-9 before final approval.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="bpo-platform.js"></script>
+</body>
+</html>

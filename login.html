@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="BPO Process Discovery Platform - Login">
+    <title>Login - BPO AI Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="bpo-platform.css">
+    <style>
+        .login-page {
+            background: linear-gradient(241deg, #294993 0%, #1d1125 100%);
+        }
+        .login-bg {
+            position: absolute;
+            left: 130px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .login-bg img {
+            width: 40%;
+            max-width: 500px;
+        }
+        .login-white-bg {
+            position: absolute;
+            top: 22%;
+            right: 10%;
+            width: 30%;
+            padding: 20px 30px;
+            border-radius: 18px;
+            background-color: #fff;
+            color: #4d4d4f;
+        }
+        .login-sysname {
+            width: 175px;
+            height: auto;
+            margin: 10px 0px;
+        }
+        .input-group {
+            margin-bottom: 1rem;
+        }
+        .input-group-text {
+            background-color: #e31837;
+            color: #fff;
+            border: 1px solid #e31837;
+            padding: 0.5rem;
+        }
+        .form-control {
+            border: 1px solid #ddd;
+            padding: 0.5rem;
+        }
+        .btn-login {
+            background-color: #fff;
+            border-radius: 25px;
+            text-align: center;
+            border: 1px solid #e31837;
+            color: #e31837;
+            width: 90%;
+            font-size: 14px;
+            padding: 8px 16px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+        .btn-login:hover {
+            background-color: #e31837;
+            color: #fff;
+        }
+        .login-footer {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+            text-align: center;
+            color: #999;
+            font-size: 0.85rem;
+        }
+        @media screen and (max-width: 1024px) {
+            .login-bg {
+                display: none;
+            }
+            .login-white-bg {
+                width: 40%;
+                right: 5%;
+            }
+        }
+        @media screen and (max-width: 768px) {
+            .login-white-bg {
+                width: 80%;
+                right: 10%;
+                left: 10%;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+        }
+    </style>
+</head>
+<body class="login-page">
+    <div class="login-bg">
+        <img src="images/login.png" alt="Login Background">
+    </div>
+
+    <div class="login-white-bg">
+        <center>
+            <img class="login-sysname" src="images/logo-login.png" alt="AURA Logo">
+            <div style="height: 10px;"></div>
+        </center>
+        <hr />
+        <div class="login-main" style="padding: 15px 10px;">
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-person" style="font-size: 1.2rem;">👤</i></span>
+                <input type="text" class="form-control" id="username" placeholder="User Name" required>
+            </div>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-lock" style="font-size: 1.2rem;">🔒</i></span>
+                <input type="password" class="form-control" id="password" placeholder="Password" required>
+            </div>
+
+            <div style="height: 10px;"></div>
+            <div class="row">
+                <div class="col">
+                    <center>
+                        <a href="dashboard.html" class="btn-login">Sign In</a>
+                    </center>
+                </div>
+            </div>
+            <div style="height: 15px;"></div>
+            <div class="row">
+                <div class="col" style="text-align: center;">
+                    <a href="#" style="color: #e31837; text-decoration: none; font-size: 0.9rem;">Forgot Password?</a>
+                    <br><br>
+                    <a href="#" style="color: #666; text-decoration: none; font-size: 0.9rem;">Admin Login</a>
+                </div>
+            </div>
+        </div>
+        <div class="login-footer">
+            <p>&copy; 2026 BPO AI Platform. Powered by Azure Services.</p>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+    <script src="bpo-platform.js"></script>
+</body>
+</html>
