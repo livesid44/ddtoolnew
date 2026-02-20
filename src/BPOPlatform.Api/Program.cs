@@ -3,6 +3,7 @@ using BPOPlatform.Application.DependencyInjection;
 using BPOPlatform.Infrastructure.DependencyInjection;
 using BPOPlatform.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Serilog;
@@ -33,14 +34,20 @@ if (!builder.Environment.IsDevelopment())
     builder.Services
         .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
+    builder.Services.AddAuthorization();
 }
 else
 {
+    // ── Development auth bypass ───────────────────────────────────────────────
+    // DevBypassAuthHandler: populates ctx.User so controller code can read claims.
+    // DevPermissivePolicyProvider: replaces the entire authorization policy system so
+    //   [Authorize] (with or without a named policy) always succeeds without a real token.
     builder.Services.AddAuthentication("DevBypass")
         .AddScheme<Microsoft.AspNetCore.Authentication.AuthenticationSchemeOptions,
                    DevBypassAuthHandler>("DevBypass", _ => { });
+    builder.Services.AddAuthorization();
+    builder.Services.AddSingleton<IAuthorizationPolicyProvider, DevPermissivePolicyProvider>();
 }
-builder.Services.AddAuthorization();
 
 // ── Application & Infrastructure layers ──────────────────────────────────────
 builder.Services.AddApplicationServices();

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BPOPlatform.Api.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/v1/[controller]")]
 [Produces("application/json")]
