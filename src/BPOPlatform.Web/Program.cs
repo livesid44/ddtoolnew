@@ -13,15 +13,15 @@ var app = builder.Build();
 // so the repo root is exactly two directories up from ContentRootPath.
 var repoRoot = Path.GetFullPath(Path.Combine(builder.Environment.ContentRootPath, "..", ".."));
 
-if (!File.Exists(Path.Combine(repoRoot, "index.html")))
+if (!File.Exists(Path.Combine(repoRoot, "login.html")))
 {
     // Fallback: already at the repo root (e.g. running from a custom working dir)
     repoRoot = builder.Environment.ContentRootPath;
 
-    if (!File.Exists(Path.Combine(repoRoot, "index.html")))
+    if (!File.Exists(Path.Combine(repoRoot, "login.html")))
     {
         throw new InvalidOperationException(
-            $"Cannot find 'index.html' in '{repoRoot}'. " +
+            $"Cannot find 'login.html' in '{repoRoot}'. " +
             "Ensure the project is run from 'src/BPOPlatform.Web/' so the " +
             "static frontend files at the repository root can be located.");
     }
@@ -29,11 +29,11 @@ if (!File.Exists(Path.Combine(repoRoot, "index.html")))
 
 var fileProvider = new PhysicalFileProvider(repoRoot);
 
-// Serve index.html for requests to "/"
+// Serve login.html for requests to "/"
 app.UseDefaultFiles(new DefaultFilesOptions
 {
     FileProvider = fileProvider,
-    DefaultFileNames = ["index.html"]
+    DefaultFileNames = ["login.html"]
 });
 
 // Serve all static assets (HTML, CSS, JS, images, fonts …)
