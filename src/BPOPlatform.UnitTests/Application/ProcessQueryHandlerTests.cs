@@ -1,3 +1,4 @@
+using BPOPlatform.Application.Common.DTOs;
 using BPOPlatform.Application.Processes.Queries;
 using BPOPlatform.Domain.Entities;
 using BPOPlatform.Domain.Enums;
@@ -16,34 +17,72 @@ public class ProcessQueryHandlerTests
     // ── GetAllProcessesQueryHandler ───────────────────────────────────────────
 
     [Fact]
-    public async Task GetAllProcesses_NoFilter_ReturnsAllProcesses()
+    public async Task GetAllProcesses_NoFilter_ReturnsPagedResult()
     {
         var processes = new List<Process>
         {
             Process.Create("AP Invoice", "desc", "Finance", "owner"),
             Process.Create("HR Onboarding", "desc", "HR", "owner")
         };
-        _repoMock.Setup(r => r.GetAllAsync(default)).ReturnsAsync(processes);
+        _repoMock
+            .Setup(r => r.GetPagedAsync(null, null, null, null, false, 1, 20, default))
+            .ReturnsAsync(((IReadOnlyList<Process>)processes, 2));
 
         var handler = new GetAllProcessesQueryHandler(_repoMock.Object);
         var result = await handler.Handle(new GetAllProcessesQuery(), default);
 
-        result.Should().HaveCount(2);
-        result.Select(p => p.Name).Should().BeEquivalentTo(["AP Invoice", "HR Onboarding"]);
+        result.Should().NotBeNull();
+        result.TotalCount.Should().Be(2);
+        result.Page.Should().Be(1);
+        result.PageSize.Should().Be(20);
+        result.Items.Should().HaveCount(2);
+        result.Items.Select(p => p.Name).Should().BeEquivalentTo(["AP Invoice", "HR Onboarding"]);
     }
 
     [Fact]
     public async Task GetAllProcesses_WithDepartmentFilter_ReturnsFiltered()
     {
         var financeProcess = Process.Create("AP Invoice", "desc", "Finance", "owner");
-        _repoMock.Setup(r => r.GetByDepartmentAsync("Finance", default))
-            .ReturnsAsync(new List<Process> { financeProcess });
+        _repoMock
+            .Setup(r => r.GetPagedAsync("Finance", null, null, null, false, 1, 20, default))
+            .ReturnsAsync(((IReadOnlyList<Process>)new List<Process> { financeProcess }, 1));
 
         var handler = new GetAllProcessesQueryHandler(_repoMock.Object);
-        var result = await handler.Handle(new GetAllProcessesQuery("Finance"), default);
+        var result = await handler.Handle(new GetAllProcessesQuery(Department: "Finance"), default);
 
-        result.Should().HaveCount(1);
-        result[0].Department.Should().Be("Finance");
+        result.TotalCount.Should().Be(1);
+        result.Items.Should().HaveCount(1);
+        result.Items[0].Department.Should().Be("Finance");
+    }
+
+    [Fact]
+    public async Task GetAllProcesses_WithStatusFilter_ReturnsFiltered()
+    {
+        var p = Process.Create("Test", "desc", "IT", "owner");
+        _repoMock
+            .Setup(r => r.GetPagedAsync(null, ProcessStatus.Draft, null, null, false, 1, 20, default))
+            .ReturnsAsync(((IReadOnlyList<Process>)new List<Process> { p }, 1));
+
+        var handler = new GetAllProcessesQueryHandler(_repoMock.Object);
+        var result = await handler.Handle(new GetAllProcessesQuery(Status: ProcessStatus.Draft), default);
+
+        result.Items.Should().HaveCount(1);
+    }
+
+    [Fact]
+    public async Task GetAllProcesses_EmptyResult_ReturnsPaginationMetadata()
+    {
+        _repoMock
+            .Setup(r => r.GetPagedAsync(null, null, null, null, false, 2, 10, default))
+            .ReturnsAsync(((IReadOnlyList<Process>)new List<Process>(), 0));
+
+        var handler = new GetAllProcessesQueryHandler(_repoMock.Object);
+        var result = await handler.Handle(new GetAllProcessesQuery(Page: 2, PageSize: 10), default);
+
+        result.TotalCount.Should().Be(0);
+        result.TotalPages.Should().Be(0);
+        result.HasNextPage.Should().BeFalse();
+        result.HasPreviousPage.Should().BeTrue(); // page 2 > 1
     }
 
     // ── GetProcessByIdQueryHandler ─────────────────────────────────────────────

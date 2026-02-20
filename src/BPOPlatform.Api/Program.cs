@@ -95,7 +95,12 @@ if (app.Environment.IsDevelopment())
 {
     using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<BPODbContext>();
-    db.Database.Migrate();
+    // Use EnsureCreated for InMemory provider (doesn't support migrations),
+    // Migrate for relational providers (SQLite, SQL Server).
+    if (db.Database.IsRelational())
+        db.Database.Migrate();
+    else
+        db.Database.EnsureCreated();
 }
 
 // ── Middleware pipeline ───────────────────────────────────────────────────────

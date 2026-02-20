@@ -1,3 +1,4 @@
+using Azure.AI.OpenAI;
 using Azure.Identity;
 using Azure.Storage.Blobs;
 using BPOPlatform.Domain.Interfaces;
@@ -7,7 +8,6 @@ using BPOPlatform.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Azure.AI.OpenAI;
 
 namespace BPOPlatform.Infrastructure.DependencyInjection;
 
@@ -32,7 +32,7 @@ public static class InfrastructureServiceExtensions
             services.AddDbContext<BPODbContext>(opts =>
                 opts.UseSqlite(connectionString));
         }
-        else
+        else if (!string.IsNullOrWhiteSpace(connectionString) && !connectionString.StartsWith("__"))
         {
             // Azure SQL Server (production / staging)
             services.AddDbContext<BPODbContext>(opts =>
@@ -40,40 +40,58 @@ public static class InfrastructureServiceExtensions
                     connectionString,
                     sqlOpts => sqlOpts.EnableRetryOnFailure(maxRetryCount: 5)));
         }
+        else
+        {
+            // No valid connection string → SQLite in-memory for local/CI (applies when appsettings uses placeholder)
+            services.AddDbContext<BPODbContext>(opts =>
+                opts.UseSqlite("DataSource=:memory:"));
+        }
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IProcessRepository, ProcessRepository>();
         services.AddScoped<IArtifactRepository, ArtifactRepository>();
         services.AddScoped<IWorkflowStepRepository, WorkflowStepRepository>();
+        services.AddScoped<IKanbanCardRepository, KanbanCardRepository>();
 
-        // ── Azure Blob Storage ────────────────────────────────────────────────
         var blobConnectionString = configuration.GetConnectionString("BlobStorage");
         var blobEndpoint = configuration["AzureStorage:ServiceUri"];
 
-        if (!string.IsNullOrEmpty(blobEndpoint))
+        if (!string.IsNullOrWhiteSpace(blobEndpoint)
+            && !blobEndpoint.StartsWith("__")
+            && Uri.TryCreate(blobEndpoint, UriKind.Absolute, out _))
         {
             // Production: use Managed Identity
             services.AddSingleton(_ => new BlobServiceClient(new Uri(blobEndpoint), new DefaultAzureCredential()));
             services.AddScoped<IBlobStorageService, AzureBlobStorageService>();
         }
-        else if (!string.IsNullOrEmpty(blobConnectionString))
+        else if (!string.IsNullOrWhiteSpace(blobConnectionString) && !blobConnectionString.StartsWith("__"))
         {
             // Development: use connection string (Azurite emulator)
             services.AddSingleton(_ => new BlobServiceClient(blobConnectionString));
             services.AddScoped<IBlobStorageService, AzureBlobStorageService>();
         }
-        // If neither is configured, IBlobStorageService is simply not registered (no crash).
+        else
+        {
+            // Fallback: local filesystem (no Blob Storage configured)
+            services.AddScoped<IBlobStorageService, LocalBlobStorageService>();
+        }
 
         // ── Azure OpenAI ──────────────────────────────────────────────────────
         services.Configure<AzureOpenAiOptions>(configuration.GetSection(AzureOpenAiOptions.SectionName));
 
         var openAiEndpoint = configuration[$"{AzureOpenAiOptions.SectionName}:Endpoint"];
-        if (!string.IsNullOrEmpty(openAiEndpoint))
+        if (!string.IsNullOrWhiteSpace(openAiEndpoint)
+            && !openAiEndpoint.StartsWith("__")
+            && Uri.TryCreate(openAiEndpoint, UriKind.Absolute, out _))
         {
             services.AddSingleton(_ => new AzureOpenAIClient(new Uri(openAiEndpoint), new DefaultAzureCredential()));
             services.AddScoped<IAiAnalysisService, AzureOpenAiAnalysisService>();
         }
-        // If not configured, IAiAnalysisService is simply not registered.
+        else
+        {
+            // Fallback: mock AI service (no Azure OpenAI configured)
+            services.AddScoped<IAiAnalysisService, MockAiAnalysisService>();
+        }
 
         return services;
     }

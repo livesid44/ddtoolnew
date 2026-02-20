@@ -154,15 +154,15 @@ All Azure services are encapsulated behind interfaces – swap any service witho
 - [x] Bicep IaC: SQL, Blob, OpenAI, App Service, Key Vault, Managed Identity RBAC
 - [x] GitHub Actions CI/CD pipeline (build → test → deploy)
 
-### Phase 2 – Core Features (Weeks 3–6)
-- [ ] EF Core migrations + seeding (default workflow steps)
-- [ ] Artifact upload endpoint (`POST /api/v1/processes/{id}/artifacts`)
-- [ ] AI analysis endpoint (`POST /api/v1/processes/{id}/analyse`)
-- [ ] User management + RBAC claims (`Admin`, `Manager`, `Analyst`, `Viewer`)
-- [ ] Kanban task board entities + CQRS handlers
-- [ ] Dashboard KPI queries (processes by status, avg scores)
-- [ ] Pagination, sorting, filtering on all list endpoints
-- [ ] Integration tests (xUnit + EF Core in-memory / Testcontainers)
+### Phase 2 – Core Features (Weeks 3–6) ✅
+- [x] EF Core migrations + seeding (default workflow steps)
+- [x] Artifact upload endpoint (`POST /api/v1/processes/{id}/artifacts`)
+- [x] AI analysis endpoint (`POST /api/v1/dashboard/processes/{id}/analyse`)
+- [x] User management + RBAC claims (`Admin`, `Manager`, `Analyst`, `Viewer`)
+- [x] Kanban task board entities + CQRS handlers
+- [x] Dashboard KPI queries (processes by status, avg scores)
+- [x] Pagination, sorting, filtering on all list endpoints
+- [x] Integration tests (xUnit + WebApplicationFactory + EF Core InMemory)
 
 ### Phase 3 – Frontend Integration (Weeks 7–9)
 - [ ] Wire existing HTML pages to REST API (fetch / Axios)

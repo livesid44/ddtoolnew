@@ -21,4 +21,8 @@
     <ProjectReference Include="..\BPOPlatform.Infrastructure\BPOPlatform.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="BPOPlatform.IntegrationTests" />
+  </ItemGroup>
+
 </Project>

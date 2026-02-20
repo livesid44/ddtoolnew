@@ -1,6 +1,8 @@
+using BPOPlatform.Application.Common.DTOs;
 using BPOPlatform.Application.Processes.Commands;
 using BPOPlatform.Application.Processes.DTOs;
 using BPOPlatform.Application.Processes.Queries;
+using BPOPlatform.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,12 +15,33 @@ namespace BPOPlatform.Api.Controllers;
 [Produces("application/json")]
 public class ProcessesController(IMediator mediator) : ControllerBase
 {
-    /// <summary>List all processes, optionally filtered by department.</summary>
+    /// <summary>
+    /// List processes with optional filtering, sorting, and pagination.
+    /// </summary>
+    /// <param name="department">Filter by department name.</param>
+    /// <param name="status">Filter by process status (Draft, InProgress, UnderReview, Approved, Deployed, Archived).</param>
+    /// <param name="ownerId">Filter by owner user ID.</param>
+    /// <param name="sortBy">Sort field: name, department, status, automationScore (default: createdAt).</param>
+    /// <param name="descending">Sort direction (default: ascending).</param>
+    /// <param name="page">Page number (1-based, default: 1).</param>
+    /// <param name="pageSize">Items per page (default: 20, max: 100).</param>
     [HttpGet]
-    [ProducesResponseType(typeof(IReadOnlyList<ProcessSummaryDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetAll([FromQuery] string? department, CancellationToken ct)
+    [ProducesResponseType(typeof(PagedResult<ProcessSummaryDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetAll(
+        [FromQuery] string? department,
+        [FromQuery] ProcessStatus? status,
+        [FromQuery] string? ownerId,
+        [FromQuery] string? sortBy,
+        [FromQuery] bool descending = false,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20,
+        CancellationToken ct = default)
     {
-        var result = await mediator.Send(new GetAllProcessesQuery(department), ct);
+        pageSize = Math.Clamp(pageSize, 1, 100);
+        page = Math.Max(1, page);
+
+        var result = await mediator.Send(
+            new GetAllProcessesQuery(department, status, ownerId, sortBy, descending, page, pageSize), ct);
         return Ok(result);
     }
 
@@ -86,4 +109,3 @@ public class ProcessesController(IMediator mediator) : ControllerBase
 
 public record UpdateProcessRequest(string Name, string Description, string Department);
 public record AdvanceStatusRequest(string NewStatus);
-

@@ -1,25 +1,43 @@
+using BPOPlatform.Application.Common.DTOs;
 using BPOPlatform.Application.Processes.DTOs;
+using BPOPlatform.Domain.Enums;
 using BPOPlatform.Domain.Interfaces;
 using MediatR;
 
 namespace BPOPlatform.Application.Processes.Queries;
 
-// ── Get All Processes ─────────────────────────────────────────────────────────
+// ── Get All Processes (paginated, filtered, sorted) ───────────────────────────
 
-public record GetAllProcessesQuery(string? Department = null) : IRequest<IReadOnlyList<ProcessSummaryDto>>;
+public record GetAllProcessesQuery(
+    string? Department = null,
+    ProcessStatus? Status = null,
+    string? OwnerId = null,
+    string? SortBy = null,
+    bool Descending = false,
+    int Page = 1,
+    int PageSize = 20
+) : IRequest<PagedResult<ProcessSummaryDto>>;
 
 public class GetAllProcessesQueryHandler(IProcessRepository repo)
-    : IRequestHandler<GetAllProcessesQuery, IReadOnlyList<ProcessSummaryDto>>
+    : IRequestHandler<GetAllProcessesQuery, PagedResult<ProcessSummaryDto>>
 {
-    public async Task<IReadOnlyList<ProcessSummaryDto>> Handle(GetAllProcessesQuery request, CancellationToken ct)
+    public async Task<PagedResult<ProcessSummaryDto>> Handle(GetAllProcessesQuery request, CancellationToken ct)
     {
-        var processes = string.IsNullOrWhiteSpace(request.Department)
-            ? await repo.GetAllAsync(ct)
-            : await repo.GetByDepartmentAsync(request.Department, ct);
+        var (items, totalCount) = await repo.GetPagedAsync(
+            request.Department,
+            request.Status,
+            request.OwnerId,
+            request.SortBy,
+            request.Descending,
+            request.Page,
+            request.PageSize,
+            ct);
 
-        return processes
+        var dtos = items
             .Select(p => new ProcessSummaryDto(p.Id, p.Name, p.Department, p.Status, p.AutomationScore))
             .ToList();
+
+        return new PagedResult<ProcessSummaryDto>(dtos, totalCount, request.Page, request.PageSize);
     }
 }
 

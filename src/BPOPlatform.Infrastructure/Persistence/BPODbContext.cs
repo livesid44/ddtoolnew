@@ -12,6 +12,7 @@ public class BPODbContext(DbContextOptions<BPODbContext> options) : DbContext(op
     public DbSet<Process> Processes => Set<Process>();
     public DbSet<ProcessArtifact> Artifacts => Set<ProcessArtifact>();
     public DbSet<WorkflowStep> WorkflowSteps => Set<WorkflowStep>();
+    public DbSet<KanbanCard> KanbanCards => Set<KanbanCard>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -52,6 +53,18 @@ public class BPODbContext(DbContextOptions<BPODbContext> options) : DbContext(op
             e.HasKey(ws => ws.Id);
             e.Property(ws => ws.StepName).HasMaxLength(200).IsRequired();
             e.Ignore(ws => ws.DomainEvents);
+        });
+
+        // KanbanCard
+        modelBuilder.Entity<KanbanCard>(e =>
+        {
+            e.HasKey(k => k.Id);
+            e.Property(k => k.Title).HasMaxLength(200).IsRequired();
+            e.Property(k => k.Description).HasMaxLength(2000);
+            e.Property(k => k.Column).HasMaxLength(50).IsRequired();
+            e.Property(k => k.AssignedTo).HasMaxLength(200);
+            e.HasIndex(k => new { k.ProcessId, k.Column });
+            e.Ignore(k => k.DomainEvents);
         });
     }
 }

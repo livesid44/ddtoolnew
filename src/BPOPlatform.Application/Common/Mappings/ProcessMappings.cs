@@ -29,4 +29,15 @@ internal static class ProcessMappingExtensions
         ws.CompletedBy,
         ws.Notes
     );
+
+    internal static ArtifactDto ToDto(this ProcessArtifact a) => new(
+        a.Id,
+        a.ProcessId,
+        a.FileName,
+        a.ArtifactType,
+        a.FileSizeBytes,
+        a.IsAnalyzed,
+        a.ConfidenceScore,
+        a.CreatedAt
+    );
 }
