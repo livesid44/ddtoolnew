@@ -1,3 +1,4 @@
+using BPOPlatform.Api.Hubs;
 using BPOPlatform.Api.Middleware;
 using BPOPlatform.Application.DependencyInjection;
 using BPOPlatform.Infrastructure.DependencyInjection;
@@ -78,15 +79,25 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+// ── SignalR ────────────────────────────────────────────────────────────────────
+builder.Services.AddSignalR();
+
 // ── Health Checks ─────────────────────────────────────────────────────────────
 builder.Services.AddHealthChecks()
     .AddDbContextCheck<BPODbContext>("database");
 
 // ── CORS ──────────────────────────────────────────────────────────────────────
 builder.Services.AddCors(opts => opts.AddPolicy("AllowFrontend", p =>
-    p.WithOrigins(builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() ?? ["http://localhost:3000"])
+{
+    var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>()
+                         ?? (builder.Environment.IsDevelopment()
+                             ? ["http://localhost:3000", "http://localhost:5500", "http://127.0.0.1:5500"]
+                             : []);
+    p.WithOrigins(allowedOrigins)
      .AllowAnyHeader()
-     .AllowAnyMethod()));
+     .AllowAnyMethod()
+     .AllowCredentials(); // Required for SignalR WebSocket handshake
+}));
 
 var app = builder.Build();
 
@@ -118,5 +129,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.MapHealthChecks("/healthz");
+app.MapHub<NotificationHub>("/hubs/notifications");
 
 app.Run();

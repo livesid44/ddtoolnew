@@ -120,7 +120,7 @@
             <div class="row">
                 <div class="col">
                     <center>
-                        <a href="dashboard.html" class="btn-login">Sign In</a>
+                        <a href="#" class="btn-login" id="signInBtn" onclick="bpoLogin(event)">Sign In</a>
                     </center>
                 </div>
             </div>
@@ -140,5 +140,34 @@
     
     <script src="script.js"></script>
     <script src="bpo-platform.js"></script>
+    <!-- Phase 3: Authentication -->
+    <script src="https://alcdn.msauth.net/browser/3.27.0/js/msal-browser.min.js"></script>
+    <script src="js/app-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        async function bpoLogin(e) {
+            e.preventDefault();
+            const btn = document.getElementById('signInBtn');
+            btn.textContent = 'Signing in…';
+            // Dev bypass: just redirect immediately
+            if (window.BpoConfig.msal.devBypass) {
+                window.location.href = 'dashboard.html';
+                return;
+            }
+            try {
+                await window.BpoAuth.login();
+                window.location.href = 'dashboard.html';
+            } catch (err) {
+                btn.textContent = 'Sign In';
+                alert('Login failed: ' + err.message);
+            }
+        }
+        // If already authenticated, redirect to dashboard
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.BpoAuth.isAuthenticated()) {
+                window.location.href = 'dashboard.html';
+            }
+        });
+    </script>
 </body>
 </html>

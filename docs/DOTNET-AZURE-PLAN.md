@@ -164,12 +164,14 @@ All Azure services are encapsulated behind interfaces – swap any service witho
 - [x] Pagination, sorting, filtering on all list endpoints
 - [x] Integration tests (xUnit + WebApplicationFactory + EF Core InMemory)
 
-### Phase 3 – Frontend Integration (Weeks 7–9)
-- [ ] Wire existing HTML pages to REST API (fetch / Axios)
-- [ ] Azure AD MSAL.js authentication in frontend
-- [ ] Real file upload to Blob via API (presigned PUT or multipart)
-- [ ] Real-time notifications (SignalR on App Service or Azure Web PubSub)
-- [ ] Replace chart placeholders with real data (Chart.js / ApexCharts)
+### Phase 3 – Frontend Integration (Weeks 7–9) ✅
+- [x] Wire existing HTML pages to REST API (fetch / Axios)
+- [x] Azure AD MSAL.js v3 authentication in frontend (dev bypass for local development)
+- [x] Real file upload to Blob via API (multipart with XHR progress bars)
+- [x] Real-time notifications (SignalR `NotificationHub` on App Service; `notifications.js` toast client)
+- [x] Replace chart placeholders with real data (Chart.js bar/doughnut/line from `/api/v1/dashboard/kpis`)
+- [x] API client module (`js/api-client.js`) with Bearer token injection and loading indicator
+- [x] All pages wired: dashboard, upload, analysis, kanban, workflow, login
 
 ### Phase 4 – AI & Automation (Weeks 10–12)
 - [ ] Document intelligence (Azure AI Document Intelligence for PDF extraction)
