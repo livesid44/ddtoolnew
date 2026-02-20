@@ -38,6 +38,10 @@
         <aside class="platform-sidebar">
             <h3>Quick Links</h3>
             <nav class="sidebar-nav">
+                <a href="intake.html" class="sidebar-link intake-link">
+                    <span class="icon"><i class="bi bi-chat-dots"></i></span>
+                    <span>New Intake</span>
+                </a>
                 <a href="workflow.html" class="sidebar-link">
                     <span class="icon"><i class="bi bi-diagram-3"></i></span>
                     <span>Workflow Engine</span>
@@ -66,6 +70,10 @@
             <div class="page-header">
                 <h1>Upload Module</h1>
                 <p>Upload process artifacts for AI analysis</p>
+                <div id="uploadIntakeInfo" class="page-intake-info" style="display:none;">
+                    <i class="bi bi-hash"></i>
+                    Uploading for intake: <strong id="uploadIntakeId">—</strong>
+                </div>
             </div>
 
             <!-- Upload Categories -->
@@ -234,5 +242,15 @@
 
     <script src="script.js"></script>
     <script src="bpo-platform.js"></script>
+    <script>
+        // Show active intake context on upload page
+        (function() {
+            const activeId = localStorage.getItem('bpo_active_intake');
+            if (!activeId) return;
+            const info = document.getElementById('uploadIntakeInfo');
+            const idEl = document.getElementById('uploadIntakeId');
+            if (info && idEl) { idEl.textContent = activeId; info.style.display = 'inline-flex'; }
+        })();
+    </script>
 </body>
 </html>

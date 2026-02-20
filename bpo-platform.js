@@ -1,7 +1,88 @@
 // BPO Platform JavaScript
 
+// -------------------------------------------------------
+// Active Intake Banner – injected on every platform page
+// -------------------------------------------------------
+function injectActiveIntakeBanner() {
+    // Don't inject on login or intake pages (intake.html manages its own banner)
+    const isLoginPage = document.querySelector('.login-page');
+    const isIntakePage = document.querySelector('.intake-page');
+    if (isLoginPage || isIntakePage) return;
+
+    const activeIntakeId = localStorage.getItem('bpo_active_intake');
+    if (!activeIntakeId) return;
+
+    // Look up intake details
+    const intakes = JSON.parse(localStorage.getItem('bpo_intakes') || '[]');
+    const intake = intakes.find(i => i.id === activeIntakeId);
+    const processName = intake ? intake.processName : '';
+
+    // Build banner HTML
+    const banner = document.createElement('div');
+    banner.className = 'active-intake-banner';
+    banner.id = 'globalIntakeBanner';
+    banner.innerHTML = `
+        <i class="bi bi-hash"></i>
+        <span>Active Intake:</span>
+        <strong>${activeIntakeId}</strong>
+        ${processName ? `<span style="opacity:0.8;font-size:0.85rem;">— ${processName}</span>` : ''}
+        <span class="intake-status-pill">${intake ? intake.status : 'active'}</span>
+        <a class="banner-switch-link" href="intake.html" title="Start a new intake">+ New Intake</a>
+    `;
+
+    // Insert after the platform header
+    const header = document.querySelector('.platform-header');
+    if (header && header.nextSibling) {
+        header.parentNode.insertBefore(banner, header.nextSibling);
+    } else if (header) {
+        header.parentNode.appendChild(banner);
+    }
+}
+
+// Inject "New Intake" link into every platform sidebar (if not already present)
+function injectIntakeSidebarLink() {
+    const isLoginPage = document.querySelector('.login-page');
+    const isIntakePage = document.querySelector('.intake-page');
+    if (isLoginPage || isIntakePage) return;
+
+    const sidebarNav = document.querySelector('.sidebar-nav');
+    if (!sidebarNav) return;
+
+    // Only add if the link doesn't already exist
+    if (sidebarNav.querySelector('a[href="intake.html"]')) return;
+
+    const link = document.createElement('a');
+    link.href = 'intake.html';
+    link.className = 'sidebar-link intake-link';
+    link.innerHTML = `
+        <span class="icon"><i class="bi bi-chat-dots"></i></span>
+        <span>New Intake</span>
+    `;
+    sidebarNav.insertBefore(link, sidebarNav.firstChild);
+}
+
+// Also store intake ID from URL param for inter-page tracking
+function trackIntakeFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    const intakeParam = params.get('intake');
+    if (!intakeParam) return;
+
+    // Validate that the intake ID matches expected format and exists in stored intakes
+    const validFormat = /^INT-\d{8}-\d{6}$/.test(intakeParam);
+    if (!validFormat) return;
+
+    const intakes = JSON.parse(localStorage.getItem('bpo_intakes') || '[]');
+    const exists = intakes.some(i => i.id === intakeParam);
+    if (exists) {
+        localStorage.setItem('bpo_active_intake', intakeParam);
+    }
+}
+
 // Login Form Handling
 document.addEventListener('DOMContentLoaded', function() {
+    trackIntakeFromUrl();
+    injectActiveIntakeBanner();
+    injectIntakeSidebarLink();
     // Login form submission
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {

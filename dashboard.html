@@ -41,6 +41,10 @@
             </div>
             <h3>Quick Links</h3>
             <nav class="sidebar-nav">
+                <a href="intake.html" class="sidebar-link intake-link">
+                    <span class="icon"><i class="bi bi-chat-dots"></i></span>
+                    <span>New Intake</span>
+                </a>
                 <a href="workflow.html" class="sidebar-link">
                     <span class="icon"><i class="bi bi-diagram-3"></i></span>
                     <span>Workflow Engine</span>
@@ -107,6 +111,31 @@
                         <div class="kpi-value">78%</div>
                         <div class="kpi-change positive">On track</div>
                     </div>
+                </div>
+            </section>
+
+            <!-- Intake Quick Start -->
+            <section class="intake-quickstart-section">
+                <div class="intake-quickstart-card">
+                    <div class="iq-icon"><i class="bi bi-chat-square-dots-fill"></i></div>
+                    <div class="iq-content">
+                        <h3>Start a New Process Intake</h3>
+                        <p>Use our guided chatbot to capture process details, upload documents and generate a unique intake ID — all activities will be tracked against it.</p>
+                    </div>
+                    <a href="intake.html" class="btn btn-primary iq-btn">
+                        <i class="bi bi-play-circle-fill"></i> Begin Intake
+                    </a>
+                </div>
+                <div id="dashboardActiveIntake" class="active-intake-card" style="display:none;">
+                    <div class="iq-icon active-icon"><i class="bi bi-hash"></i></div>
+                    <div class="iq-content">
+                        <h3>Active Intake</h3>
+                        <p id="dashActiveIntakeId" style="font-family:monospace;font-weight:600;color:#294993;">—</p>
+                        <p id="dashActiveIntakeName" style="font-size:0.85rem;color:#555;">—</p>
+                    </div>
+                    <a id="dashActiveIntakeLink" href="workflow.html" class="btn btn-secondary iq-btn">
+                        <i class="bi bi-arrow-right-circle"></i> Continue
+                    </a>
                 </div>
             </section>
 
@@ -252,6 +281,23 @@
             const sidebar = document.getElementById('platformSidebar');
             sidebar.classList.toggle('active');
         }
+
+        // Show active intake card if one exists
+        (function() {
+            const activeId = localStorage.getItem('bpo_active_intake');
+            if (!activeId) return;
+            const intakes = JSON.parse(localStorage.getItem('bpo_intakes') || '[]');
+            const intake = intakes.find(i => i.id === activeId);
+            if (!intake) return;
+            const card = document.getElementById('dashboardActiveIntake');
+            if (card) {
+                document.getElementById('dashActiveIntakeId').textContent = activeId;
+                document.getElementById('dashActiveIntakeName').textContent = intake.processName || '';
+                const link = document.getElementById('dashActiveIntakeLink');
+                if (link) link.href = `workflow.html?intake=${encodeURIComponent(activeId)}`;
+                card.style.display = 'flex';
+            }
+        })();
     </script>
 </body>
 </html>
