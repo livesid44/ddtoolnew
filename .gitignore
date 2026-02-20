@@ -1,0 +1,46 @@
+# .NET Build artifacts
+[Bb]in/
+[Oo]bj/
+out/
+publish/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Secrets & environment overrides (NEVER commit)
+**/appsettings.*.json
+!**/appsettings.json
+!**/appsettings.Development.json
+*.env
+local.settings.json
+.env.*
+
+# Rider / VS Code / Visual Studio
+.idea/
+*.DotSettings.user
+.vscode/
+*.pidb
+*.pdb
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Zip archives (the AURA theme source zip is already committed)
+*.zip
+!V8-AURA-22-09-2025.zip
