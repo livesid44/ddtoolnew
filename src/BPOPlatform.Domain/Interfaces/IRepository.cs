@@ -64,6 +64,14 @@ public interface IKanbanCardRepository : IRepository<KanbanCard>
 }
 
 /// <summary>
+/// IntakeRequest-specific repository.
+/// </summary>
+public interface IIntakeRepository : IRepository<IntakeRequest>
+{
+    Task<IReadOnlyList<IntakeRequest>> GetByOwnerAsync(string ownerId, CancellationToken cancellationToken = default);
+}
+
+/// <summary>
 /// Unit of Work: saves all pending changes atomically.
 /// </summary>
 public interface IUnitOfWork

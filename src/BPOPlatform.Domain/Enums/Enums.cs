@@ -43,3 +43,15 @@ public static class Roles
     public const string SuperAdmin = "SuperAdmin";
     public const string User = "User";
 }
+
+public enum IntakeStatus
+{
+    /// <summary>Chat is ongoing, meta fields still being collected.</summary>
+    Draft = 0,
+    /// <summary>Meta info submitted, ready for artifact upload.</summary>
+    Submitted = 1,
+    /// <summary>Artifacts uploaded, AI analysis has been run.</summary>
+    Analysed = 2,
+    /// <summary>Promoted to a full Process project.</summary>
+    Promoted = 3
+}

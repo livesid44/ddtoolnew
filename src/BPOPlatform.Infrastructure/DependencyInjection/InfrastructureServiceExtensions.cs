@@ -54,6 +54,7 @@ public static class InfrastructureServiceExtensions
         services.AddScoped<IWorkflowStepRepository, WorkflowStepRepository>();
         services.AddScoped<IKanbanCardRepository, KanbanCardRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IIntakeRepository, IntakeRepository>();
 
         // ── Auth & Identity ────────────────────────────────────────────────────
         services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
@@ -170,6 +171,19 @@ public static class InfrastructureServiceExtensions
         else
         {
             services.AddScoped<IExternalTicketingService, NoOpTicketingService>();
+        }
+
+        // ── Intake Chat Service ───────────────────────────────────────────────
+        var openAiForIntake = configuration["AzureOpenAI:Endpoint"];
+        if (!string.IsNullOrWhiteSpace(openAiForIntake)
+            && !openAiForIntake.StartsWith("__")
+            && Uri.TryCreate(openAiForIntake, UriKind.Absolute, out _))
+        {
+            services.AddScoped<IIntakeChatService, AzureIntakeChatService>();
+        }
+        else
+        {
+            services.AddScoped<IIntakeChatService, MockIntakeChatService>();
         }
 
         return services;

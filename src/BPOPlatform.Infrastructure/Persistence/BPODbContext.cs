@@ -14,6 +14,8 @@ public class BPODbContext(DbContextOptions<BPODbContext> options) : DbContext(op
     public DbSet<WorkflowStep> WorkflowSteps => Set<WorkflowStep>();
     public DbSet<KanbanCard> KanbanCards => Set<KanbanCard>();
     public DbSet<ApplicationUser> Users => Set<ApplicationUser>();
+    public DbSet<IntakeRequest> IntakeRequests => Set<IntakeRequest>();
+    public DbSet<IntakeArtifact> IntakeArtifacts => Set<IntakeArtifact>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -81,6 +83,40 @@ public class BPODbContext(DbContextOptions<BPODbContext> options) : DbContext(op
             e.HasIndex(u => u.Username).IsUnique();
             e.HasIndex(u => u.Email).IsUnique();
             e.Ignore(u => u.DomainEvents);
+        });
+
+        // IntakeRequest
+        modelBuilder.Entity<IntakeRequest>(e =>
+        {
+            e.HasKey(r => r.Id);
+            e.Property(r => r.Title).HasMaxLength(200).IsRequired();
+            e.Property(r => r.Description).HasMaxLength(2000);
+            e.Property(r => r.Department).HasMaxLength(100);
+            e.Property(r => r.Location).HasMaxLength(200);
+            e.Property(r => r.BusinessUnit).HasMaxLength(200);
+            e.Property(r => r.ContactEmail).HasMaxLength(200);
+            e.Property(r => r.QueuePriority).HasMaxLength(20).IsRequired();
+            e.Property(r => r.OwnerId).HasMaxLength(100).IsRequired();
+            e.Property(r => r.ChatHistoryJson);       // unbounded JSON
+            e.Property(r => r.AiBrief);               // nullable
+            e.Property(r => r.AiCheckpointsJson);     // nullable JSON
+            e.Property(r => r.AiActionablesJson);     // nullable JSON
+            e.HasMany(r => r.Artifacts)
+             .WithOne()
+             .HasForeignKey(a => a.IntakeRequestId)
+             .OnDelete(DeleteBehavior.Cascade);
+            e.HasIndex(r => r.OwnerId);
+            e.Ignore(r => r.DomainEvents);
+        });
+
+        // IntakeArtifact
+        modelBuilder.Entity<IntakeArtifact>(e =>
+        {
+            e.HasKey(a => a.Id);
+            e.Property(a => a.FileName).HasMaxLength(500).IsRequired();
+            e.Property(a => a.BlobPath).HasMaxLength(1000).IsRequired();
+            e.Property(a => a.ExtractedText); // nullable, no length limit
+            e.Ignore(a => a.DomainEvents);
         });
     }
 }

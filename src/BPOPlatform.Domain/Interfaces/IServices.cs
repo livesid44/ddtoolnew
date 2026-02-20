@@ -95,3 +95,55 @@ public interface IExternalTicketingService
 
 /// <summary>Reference to a ticket created in an external system.</summary>
 public record ExternalTicket(string TicketId, string Url, string Status);
+
+// ── Phase 6: Intake Module ────────────────────────────────────────────────────
+
+/// <summary>
+/// Abstraction for the AI-powered guided intake chat service.
+/// Uses Azure OpenAI (GPT-4o) to progressively extract meta fields through conversation.
+/// Falls back to <c>MockIntakeChatService</c> when Azure OpenAI is not configured.
+/// </summary>
+public interface IIntakeChatService
+{
+    /// <summary>
+    /// Sends a user message and returns an AI assistant response with updated meta fields.
+    /// </summary>
+    Task<IntakeChatServiceResponse> SendMessageAsync(
+        IReadOnlyList<BPOPlatform.Domain.Entities.IntakeChatMessage> history,
+        string userMessage,
+        IntakeMetaFields currentFields,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Runs AI analysis on a completed intake (description + artifact texts) and returns
+    /// a structured brief, checkpoints, and actionables.
+    /// </summary>
+    Task<IntakeAnalysisResult> AnalyseIntakeAsync(
+        string title,
+        string? description,
+        IEnumerable<string> artifactTexts,
+        CancellationToken cancellationToken = default);
+}
+
+/// <summary>Response from the intake chat service after processing a single user turn.</summary>
+public record IntakeChatServiceResponse(
+    string AssistantMessage,
+    IntakeMetaFields UpdatedFields,
+    /// <summary>True when all required fields have been collected and the user can submit.</summary>
+    bool IsComplete);
+
+/// <summary>Mutable bag of meta-fields being collected progressively in the intake chat.</summary>
+public record IntakeMetaFields(
+    string? Title = null,
+    string? Department = null,
+    string? Location = null,
+    string? Description = null,
+    string? QueuePriority = null,
+    string? ContactEmail = null,
+    string? BusinessUnit = null);
+
+/// <summary>Structured AI analysis result for an intake request.</summary>
+public record IntakeAnalysisResult(
+    string Brief,
+    IReadOnlyList<string> Checkpoints,
+    IReadOnlyList<string> Actionables);

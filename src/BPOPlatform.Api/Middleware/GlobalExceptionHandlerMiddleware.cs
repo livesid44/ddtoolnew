@@ -30,6 +30,7 @@ public class GlobalExceptionHandlerMiddleware(RequestDelegate next, ILogger<Glob
         {
             KeyNotFoundException knf => (HttpStatusCode.NotFound, "Not Found", knf.Message),
             ArgumentException ae     => (HttpStatusCode.BadRequest, "Bad Request", ae.Message),
+            InvalidOperationException ioe => (HttpStatusCode.BadRequest, "Invalid Operation", ioe.Message),
             ValidationException ve   => (HttpStatusCode.UnprocessableEntity, "Validation Failed",
                                          string.Join("; ", ve.Errors.Select(e => e.ErrorMessage))),
             UnauthorizedAccessException => (HttpStatusCode.Forbidden, "Forbidden", "You do not have permission to perform this action."),

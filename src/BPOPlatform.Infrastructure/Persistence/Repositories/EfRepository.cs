@@ -11,7 +11,7 @@ internal class EfRepository<T>(BPODbContext db) : IRepository<T> where T : BaseE
 {
     protected readonly BPODbContext Db = db;
 
-    public async Task<T?> GetByIdAsync(Guid id, CancellationToken ct = default)
+    public virtual async Task<T?> GetByIdAsync(Guid id, CancellationToken ct = default)
         => await Db.Set<T>().FindAsync([id], ct);
 
     public async Task<IReadOnlyList<T>> GetAllAsync(CancellationToken ct = default)
