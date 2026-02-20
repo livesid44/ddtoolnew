@@ -40,9 +40,22 @@ public class Process : BaseEntity
             Status = ProcessStatus.Draft
         };
 
+        // Seed the standard 5-step discovery workflow
+        process._workflowSteps.AddRange(DefaultWorkflowSteps(process.Id));
+
         process.AddDomainEvent(new ProcessCreatedEvent(process.Id, name));
         return process;
     }
+
+    /// <summary>Returns the five standard BPO discovery workflow steps for a new process.</summary>
+    private static IEnumerable<WorkflowStep> DefaultWorkflowSteps(Guid processId) =>
+    [
+        WorkflowStep.Create(processId, 1, "Meta Information",  ProcessStatus.Draft),
+        WorkflowStep.Create(processId, 2, "Artifact Upload",   ProcessStatus.InProgress),
+        WorkflowStep.Create(processId, 3, "AI Validation",     ProcessStatus.UnderReview),
+        WorkflowStep.Create(processId, 4, "Review & Approval", ProcessStatus.Approved),
+        WorkflowStep.Create(processId, 5, "Deployment",        ProcessStatus.Deployed),
+    ];
 
     public void UpdateDetails(string name, string description, string department)
     {

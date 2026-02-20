@@ -1,23 +1,46 @@
+using BPOPlatform.Api.Middleware;
 using BPOPlatform.Application.DependencyInjection;
 using BPOPlatform.Infrastructure.DependencyInjection;
+using BPOPlatform.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Serilog;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // ── Logging ───────────────────────────────────────────────────────────────────
-builder.Host.UseSerilog((ctx, lc) => lc
-    .ReadFrom.Configuration(ctx.Configuration)
-    .WriteTo.Console()
-    .WriteTo.ApplicationInsights(
-        ctx.Configuration["ApplicationInsights:ConnectionString"] ?? string.Empty,
-        TelemetryConverter.Traces));
+var loggerConfig = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+    .Enrich.FromLogContext()
+    .WriteTo.Console();
+
+var appInsightsConnStr = builder.Configuration["ApplicationInsights:ConnectionString"];
+if (!string.IsNullOrWhiteSpace(appInsightsConnStr) && !appInsightsConnStr.StartsWith("__"))
+    loggerConfig.WriteTo.ApplicationInsights(appInsightsConnStr, TelemetryConverter.Traces);
+
+Log.Logger = loggerConfig.CreateLogger();
+builder.Host.UseSerilog();
 
 // ── Authentication (Azure AD / Entra ID) ─────────────────────────────────────
-builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
+// In Production: enforce Azure AD JWT auth on all controllers.
+// In Development: auth middleware is registered but controllers have no [Authorize],
+// so the API is accessible without a token for local development.
+if (!builder.Environment.IsDevelopment())
+{
+    builder.Services
+        .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
+}
+else
+{
+    builder.Services.AddAuthentication("DevBypass")
+        .AddScheme<Microsoft.AspNetCore.Authentication.AuthenticationSchemeOptions,
+                   DevBypassAuthHandler>("DevBypass", _ => { });
+}
+builder.Services.AddAuthorization();
 
 // ── Application & Infrastructure layers ──────────────────────────────────────
 builder.Services.AddApplicationServices();
@@ -34,7 +57,7 @@ builder.Services.AddSwaggerGen(c =>
         Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
         Scheme = "bearer",
         BearerFormat = "JWT",
-        Description = "Enter your Azure AD JWT token."
+        Description = "Enter your Azure AD JWT token (not required in Development)."
     });
     c.AddSecurityRequirement(new()
     {
@@ -48,7 +71,11 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// ── CORS (configure per environment) ─────────────────────────────────────────
+// ── Health Checks ─────────────────────────────────────────────────────────────
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<BPODbContext>("database");
+
+// ── CORS ──────────────────────────────────────────────────────────────────────
 builder.Services.AddCors(opts => opts.AddPolicy("AllowFrontend", p =>
     p.WithOrigins(builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() ?? ["http://localhost:3000"])
      .AllowAnyHeader()
@@ -56,7 +83,17 @@ builder.Services.AddCors(opts => opts.AddPolicy("AllowFrontend", p =>
 
 var app = builder.Build();
 
+// ── Auto-migrate in Development ───────────────────────────────────────────────
+if (app.Environment.IsDevelopment())
+{
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<BPODbContext>();
+    db.Database.Migrate();
+}
+
 // ── Middleware pipeline ───────────────────────────────────────────────────────
+app.UseGlobalExceptionHandler();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -64,10 +101,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseSerilogRequestLogging();
-app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.MapHealthChecks("/healthz");
 
 app.Run();

@@ -17,4 +17,16 @@ internal static class ProcessMappingExtensions
         p.CreatedAt,
         p.Artifacts.Count
     );
+
+    internal static WorkflowStepDto ToDto(this WorkflowStep ws) => new(
+        ws.Id,
+        ws.ProcessId,
+        ws.StepOrder,
+        ws.StepName,
+        ws.RequiredStatus,
+        ws.IsCompleted,
+        ws.CompletedAt,
+        ws.CompletedBy,
+        ws.Notes
+    );
 }

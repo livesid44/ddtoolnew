@@ -33,3 +33,15 @@ public record ArtifactDto(
     double? ConfidenceScore,
     DateTime CreatedAt
 );
+
+public record WorkflowStepDto(
+    Guid Id,
+    Guid ProcessId,
+    int StepOrder,
+    string StepName,
+    ProcessStatus RequiredStatus,
+    bool IsCompleted,
+    DateTime? CompletedAt,
+    string? CompletedBy,
+    string? Notes
+);

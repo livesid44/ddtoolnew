@@ -21,15 +21,30 @@ public static class InfrastructureServiceExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        // ── EF Core (Azure SQL) ───────────────────────────────────────────────
-        services.AddDbContext<BPODbContext>(opts =>
-            opts.UseSqlServer(
-                configuration.GetConnectionString("DefaultConnection"),
-                sqlOpts => sqlOpts.EnableRetryOnFailure(maxRetryCount: 5)));
+        // ── EF Core ───────────────────────────────────────────────────────────
+        // Supports both SQL Server (Azure) and SQLite (local dev / tests).
+        var connectionString = configuration.GetConnectionString("DefaultConnection") ?? string.Empty;
+
+        if (connectionString.StartsWith("DataSource=", StringComparison.OrdinalIgnoreCase)
+            || connectionString.StartsWith("Data Source=", StringComparison.OrdinalIgnoreCase))
+        {
+            // SQLite – used for local development and in-process testing
+            services.AddDbContext<BPODbContext>(opts =>
+                opts.UseSqlite(connectionString));
+        }
+        else
+        {
+            // Azure SQL Server (production / staging)
+            services.AddDbContext<BPODbContext>(opts =>
+                opts.UseSqlServer(
+                    connectionString,
+                    sqlOpts => sqlOpts.EnableRetryOnFailure(maxRetryCount: 5)));
+        }
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IProcessRepository, ProcessRepository>();
         services.AddScoped<IArtifactRepository, ArtifactRepository>();
+        services.AddScoped<IWorkflowStepRepository, WorkflowStepRepository>();
 
         // ── Azure Blob Storage ────────────────────────────────────────────────
         var blobConnectionString = configuration.GetConnectionString("BlobStorage");
@@ -39,14 +54,15 @@ public static class InfrastructureServiceExtensions
         {
             // Production: use Managed Identity
             services.AddSingleton(_ => new BlobServiceClient(new Uri(blobEndpoint), new DefaultAzureCredential()));
+            services.AddScoped<IBlobStorageService, AzureBlobStorageService>();
         }
         else if (!string.IsNullOrEmpty(blobConnectionString))
         {
             // Development: use connection string (Azurite emulator)
             services.AddSingleton(_ => new BlobServiceClient(blobConnectionString));
+            services.AddScoped<IBlobStorageService, AzureBlobStorageService>();
         }
-
-        services.AddScoped<IBlobStorageService, AzureBlobStorageService>();
+        // If neither is configured, IBlobStorageService is simply not registered (no crash).
 
         // ── Azure OpenAI ──────────────────────────────────────────────────────
         services.Configure<AzureOpenAiOptions>(configuration.GetSection(AzureOpenAiOptions.SectionName));
@@ -57,6 +73,7 @@ public static class InfrastructureServiceExtensions
             services.AddSingleton(_ => new AzureOpenAIClient(new Uri(openAiEndpoint), new DefaultAzureCredential()));
             services.AddScoped<IAiAnalysisService, AzureOpenAiAnalysisService>();
         }
+        // If not configured, IAiAnalysisService is simply not registered.
 
         return services;
     }

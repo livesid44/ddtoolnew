@@ -37,3 +37,17 @@ public class GetProcessByIdQueryHandler(IProcessRepository repo)
         return process.ToDto();
     }
 }
+
+// ── Get Workflow Steps for a Process ─────────────────────────────────────────
+
+public record GetWorkflowStepsQuery(Guid ProcessId) : IRequest<IReadOnlyList<WorkflowStepDto>>;
+
+public class GetWorkflowStepsQueryHandler(IWorkflowStepRepository repo)
+    : IRequestHandler<GetWorkflowStepsQuery, IReadOnlyList<WorkflowStepDto>>
+{
+    public async Task<IReadOnlyList<WorkflowStepDto>> Handle(GetWorkflowStepsQuery request, CancellationToken ct)
+    {
+        var steps = await repo.GetByProcessIdAsync(request.ProcessId, ct);
+        return steps.OrderBy(s => s.StepOrder).Select(s => s.ToDto()).ToList();
+    }
+}

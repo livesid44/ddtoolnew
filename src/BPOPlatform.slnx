@@ -4,4 +4,5 @@
   <Project Path="BPOPlatform.Domain/BPOPlatform.Domain.csproj" />
   <Project Path="BPOPlatform.Functions/BPOPlatform.Functions.csproj" />
   <Project Path="BPOPlatform.Infrastructure/BPOPlatform.Infrastructure.csproj" />
+  <Project Path="BPOPlatform.UnitTests/BPOPlatform.UnitTests.csproj" />
 </Solution>

@@ -34,6 +34,14 @@ public interface IArtifactRepository : IRepository<ProcessArtifact>
 }
 
 /// <summary>
+/// WorkflowStep-specific repository.
+/// </summary>
+public interface IWorkflowStepRepository : IRepository<WorkflowStep>
+{
+    Task<IReadOnlyList<WorkflowStep>> GetByProcessIdAsync(Guid processId, CancellationToken cancellationToken = default);
+}
+
+/// <summary>
 /// Unit of Work: saves all pending changes atomically.
 /// </summary>
 public interface IUnitOfWork

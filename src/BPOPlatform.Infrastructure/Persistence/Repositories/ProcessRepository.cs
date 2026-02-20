@@ -33,6 +33,16 @@ internal class ArtifactRepository(BPODbContext db) : EfRepository<ProcessArtifac
             .ToListAsync(ct);
 }
 
+internal class WorkflowStepRepository(BPODbContext db) : EfRepository<WorkflowStep>(db), IWorkflowStepRepository
+{
+    public async Task<IReadOnlyList<WorkflowStep>> GetByProcessIdAsync(Guid processId, CancellationToken ct = default)
+        => await Db.WorkflowSteps
+            .Where(ws => ws.ProcessId == processId)
+            .OrderBy(ws => ws.StepOrder)
+            .AsNoTracking()
+            .ToListAsync(ct);
+}
+
 /// <summary>Unit of Work delegates to EF Core's SaveChangesAsync.</summary>
 internal class UnitOfWork(BPODbContext db) : IUnitOfWork
 {

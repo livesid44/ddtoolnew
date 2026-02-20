@@ -39,7 +39,58 @@ public class CreateProcessCommandHandler(IProcessRepository repo, IUnitOfWork uo
     }
 }
 
-// ── Update Process Status ─────────────────────────────────────────────────────
+// ── Update Process Details ────────────────────────────────────────────────────
+
+public record UpdateProcessCommand(
+    Guid Id,
+    string Name,
+    string Description,
+    string Department
+) : IRequest<ProcessDto>;
+
+public class UpdateProcessCommandValidator : AbstractValidator<UpdateProcessCommand>
+{
+    public UpdateProcessCommandValidator()
+    {
+        RuleFor(x => x.Id).NotEmpty();
+        RuleFor(x => x.Name).NotEmpty().MaximumLength(200);
+        RuleFor(x => x.Description).MaximumLength(2000);
+        RuleFor(x => x.Department).NotEmpty().MaximumLength(100);
+    }
+}
+
+public class UpdateProcessCommandHandler(IProcessRepository repo, IUnitOfWork uow)
+    : IRequestHandler<UpdateProcessCommand, ProcessDto>
+{
+    public async Task<ProcessDto> Handle(UpdateProcessCommand request, CancellationToken ct)
+    {
+        var process = await repo.GetByIdAsync(request.Id, ct)
+                      ?? throw new KeyNotFoundException($"Process {request.Id} not found.");
+
+        process.UpdateDetails(request.Name, request.Description, request.Department);
+        await uow.SaveChangesAsync(ct);
+        return process.ToDto();
+    }
+}
+
+// ── Delete Process ────────────────────────────────────────────────────────────
+
+public record DeleteProcessCommand(Guid Id) : IRequest;
+
+public class DeleteProcessCommandHandler(IProcessRepository repo, IUnitOfWork uow)
+    : IRequestHandler<DeleteProcessCommand>
+{
+    public async Task Handle(DeleteProcessCommand request, CancellationToken ct)
+    {
+        var exists = await repo.GetByIdAsync(request.Id, ct)
+                     ?? throw new KeyNotFoundException($"Process {request.Id} not found.");
+
+        await repo.DeleteAsync(exists.Id, ct);
+        await uow.SaveChangesAsync(ct);
+    }
+}
+
+// ── Advance Process Status ────────────────────────────────────────────────────
 
 public record AdvanceProcessStatusCommand(Guid ProcessId, string NewStatus) : IRequest<ProcessDto>;
 
