@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <!-- This project is the local-dev static file host for the HTML frontend.
+         In production the frontend is deployed to Azure Static Web Apps. -->
+  </PropertyGroup>
+
+</Project>
