@@ -9,6 +9,12 @@
     <link rel="stylesheet" href="bootstrap-icons.css">
     <link rel="stylesheet" href="bpo-platform.css">
     <link rel="stylesheet" href="professional-enhancements.css">
+    <!-- Chart.js for live data visualisation -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js" defer></script>
+    <!-- MSAL.js for Azure AD authentication -->
+    <script src="https://alcdn.msauth.net/browser/3.27.0/js/msal-browser.min.js" defer></script>
+    <!-- SignalR client for real-time notifications -->
+    <script src="https://cdn.jsdelivr.net/npm/@microsoft/signalr@8.0.7/dist/browser/signalr.min.js" defer></script>
 </head>
 <body class="dashboard-page">
     <!-- Header with Navigation -->
@@ -27,8 +33,8 @@
                 </ul>
             </nav>
             <div class="user-menu">
-                <span class="user-name">John Doe</span>
-                <button onclick="location.href='login.html'" class="btn btn-sm" style="background: #e31837; border-color: #e31837;">Logout</button>
+                <span class="user-name" id="userDisplayName">Loading…</span>
+                <button id="logoutBtn" onclick="location.href='login.html'" class="btn btn-sm" style="background: #e31837; border-color: #e31837;">Logout</button>
             </div>
         </div>
     </header>
@@ -44,6 +50,10 @@
                 <a href="workflow.html" class="sidebar-link">
                     <span class="icon"><i class="bi bi-diagram-3"></i></span>
                     <span>Workflow Engine</span>
+                </a>
+                <a href="intake.html" class="sidebar-link">
+                    <span class="icon"><i class="bi bi-inbox-fill"></i></span>
+                    <span>Intake</span>
                 </a>
                 <a href="upload.html" class="sidebar-link">
                     <span class="icon"><i class="bi bi-cloud-upload"></i></span>
@@ -77,8 +87,8 @@
                     <div class="kpi-icon"><i class="bi bi-graph-up"></i></div>
                     <div class="kpi-content">
                         <h3>Processes Discovered</h3>
-                        <div class="kpi-value">247</div>
-                        <div class="kpi-change positive">+12% this month</div>
+                        <div class="kpi-value" id="kpi-processes-discovered">--</div>
+                        <div class="kpi-change positive" id="kpi-status-breakdown"></div>
                     </div>
                 </div>
                 
@@ -86,7 +96,7 @@
                     <div class="kpi-icon"><i class="bi bi-hourglass-split"></i></div>
                     <div class="kpi-content">
                         <h3>Pending Reviews</h3>
-                        <div class="kpi-value">32</div>
+                        <div class="kpi-value" id="kpi-pending-reviews">--</div>
                         <div class="kpi-change warning">Needs attention</div>
                     </div>
                 </div>
@@ -95,8 +105,8 @@
                     <div class="kpi-icon"><i class="bi bi-shield-check"></i></div>
                     <div class="kpi-content">
                         <h3>Compliance Status</h3>
-                        <div class="kpi-value">94%</div>
-                        <div class="kpi-change positive">+3% improvement</div>
+                        <div class="kpi-value" id="kpi-compliance-status">--</div>
+                        <div class="kpi-change positive">Avg compliance score</div>
                     </div>
                 </div>
                 
@@ -104,8 +114,8 @@
                     <div class="kpi-icon"><i class="bi bi-lightning"></i></div>
                     <div class="kpi-content">
                         <h3>Automation Rate</h3>
-                        <div class="kpi-value">78%</div>
-                        <div class="kpi-change positive">On track</div>
+                        <div class="kpi-value" id="kpi-automation-rate">--</div>
+                        <div class="kpi-change positive">Avg automation score</div>
                     </div>
                 </div>
             </section>
@@ -116,35 +126,11 @@
                     <div class="chart-header">
                         <h3>Process Discovery Progress</h3>
                         <select class="chart-filter">
-                            <option>Last 7 days</option>
-                            <option>Last 30 days</option>
-                            <option>Last 90 days</option>
+                            <option>By Status</option>
                         </select>
                     </div>
-                    <div class="chart-placeholder">
-                        <div class="chart-bars">
-                            <div class="chart-bar" style="height: 60%">
-                                <span class="bar-label">Mon</span>
-                            </div>
-                            <div class="chart-bar" style="height: 75%">
-                                <span class="bar-label">Tue</span>
-                            </div>
-                            <div class="chart-bar" style="height: 50%">
-                                <span class="bar-label">Wed</span>
-                            </div>
-                            <div class="chart-bar" style="height: 85%">
-                                <span class="bar-label">Thu</span>
-                            </div>
-                            <div class="chart-bar" style="height: 70%">
-                                <span class="bar-label">Fri</span>
-                            </div>
-                            <div class="chart-bar" style="height: 40%">
-                                <span class="bar-label">Sat</span>
-                            </div>
-                            <div class="chart-bar" style="height: 35%">
-                                <span class="bar-label">Sun</span>
-                            </div>
-                        </div>
+                    <div class="chart-placeholder" style="position:relative;height:200px;">
+                        <canvas id="chartBar"></canvas>
                     </div>
                 </div>
 
@@ -152,27 +138,11 @@
                     <div class="chart-header">
                         <h3>Completion Rate</h3>
                     </div>
-                    <div class="chart-placeholder">
-                        <div class="donut-chart">
-                            <div class="donut-hole">
-                                <span class="donut-value">78%</span>
-                                <span class="donut-label">Complete</span>
-                            </div>
-                        </div>
-                        <div class="chart-legend">
-                            <div class="legend-item">
-                                <span class="legend-color" style="background: #4caf50"></span>
-                                <span>Completed (78%)</span>
-                            </div>
-                            <div class="legend-item">
-                                <span class="legend-color" style="background: #ff9800"></span>
-                                <span>In Progress (15%)</span>
-                            </div>
-                            <div class="legend-item">
-                                <span class="legend-color" style="background: #f44336"></span>
-                                <span>Pending (7%)</span>
-                            </div>
-                        </div>
+                    <div class="chart-placeholder" style="position:relative;height:200px;">
+                        <canvas id="chartDoughnut"></canvas>
+                        <div id="donut-centre-value" style="position:absolute;top:50%;left:50%;
+                             transform:translate(-50%,-60%);font-size:1.4rem;font-weight:700;
+                             color:#294993;pointer-events:none;">--</div>
                     </div>
                 </div>
             </section>
@@ -183,18 +153,8 @@
                     <div class="chart-header">
                         <h3>Compliance Metrics Timeline</h3>
                     </div>
-                    <div class="chart-placeholder">
-                        <div class="line-chart">
-                            <div class="line-path"></div>
-                            <div class="line-points">
-                                <span class="point" style="left: 10%; bottom: 60%"></span>
-                                <span class="point" style="left: 25%; bottom: 70%"></span>
-                                <span class="point" style="left: 40%; bottom: 65%"></span>
-                                <span class="point" style="left: 55%; bottom: 80%"></span>
-                                <span class="point" style="left: 70%; bottom: 85%"></span>
-                                <span class="point" style="left: 85%; bottom: 90%"></span>
-                            </div>
-                        </div>
+                    <div class="chart-placeholder" style="position:relative;height:220px;">
+                        <canvas id="chartLine"></canvas>
                     </div>
                 </div>
             </section>
@@ -247,6 +207,12 @@
 
     <script src="script.js"></script>
     <script src="bpo-platform.js"></script>
+    <!-- Phase 3: API integration -->
+    <script src="js/app-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api-client.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/dashboard-api.js"></script>
     <script>
         function toggleSidebar() {
             const sidebar = document.getElementById('platformSidebar');

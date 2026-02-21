@@ -536,3 +536,39 @@
         height: 32px;
     }
 }
+
+/* ── Phase 3: API integration styles ─────────────────────────────────────── */
+
+/* Loading overlay on body during API calls */
+body.api-loading::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #294993, #e31837, #294993);
+    background-size: 200% 100%;
+    animation: bpo-loading-bar 1.2s linear infinite;
+    z-index: 10000;
+}
+@keyframes bpo-loading-bar {
+    0%   { background-position: 0% 0%; }
+    100% { background-position: -200% 0%; }
+}
+
+/* Kanban drag-over highlight */
+.kanban-column.drag-over {
+    background: rgba(41, 73, 147, 0.06);
+    border: 2px dashed #294993;
+    border-radius: 8px;
+}
+
+/* Status pill (KPI card breakdown) */
+.status-pill {
+    display: inline-block;
+    background: rgba(41,73,147,.1);
+    color: #294993;
+    border-radius: 12px;
+    padding: 2px 8px;
+    font-size: .75rem;
+    margin: 2px;
+}

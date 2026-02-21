@@ -9,6 +9,10 @@
     <link rel="stylesheet" href="bpo-platform.css">
     <link rel="stylesheet" href="bootstrap-icons.css">
     <link rel="stylesheet" href="professional-enhancements.css">
+    <!-- MSAL.js for Azure AD authentication -->
+    <script src="https://alcdn.msauth.net/browser/3.27.0/js/msal-browser.min.js" defer></script>
+    <!-- SignalR client for real-time notifications -->
+    <script src="https://cdn.jsdelivr.net/npm/@microsoft/signalr@8.0.7/dist/browser/signalr.min.js" defer></script>
 </head>
 <body class="upload-page">
     <!-- Header with Navigation -->
@@ -41,6 +45,10 @@
                 <a href="workflow.html" class="sidebar-link">
                     <span class="icon"><i class="bi bi-diagram-3"></i></span>
                     <span>Workflow Engine</span>
+                </a>
+                <a href="intake.html" class="sidebar-link">
+                    <span class="icon"><i class="bi bi-inbox-fill"></i></span>
+                    <span>Intake</span>
                 </a>
                 <a href="upload.html" class="sidebar-link active">
                     <span class="icon"><i class="bi bi-cloud-upload"></i></span>
@@ -102,99 +110,8 @@
                     </div>
                 </div>
 
-                <div class="files-list">
-                    <div class="file-item uploaded">
-                        <div class="file-icon"><i class="bi bi-camera-video"></i></div>
-                        <div class="file-info">
-                            <h4>customer_service_training.mp4</h4>
-                            <p>Video • 125 MB • Uploaded 2 hours ago</p>
-                        </div>
-                        <div class="file-status">
-                            <span class="status-badge success">✅ Analyzed</span>
-                            <div class="file-actions">
-                                <button class="btn btn-sm">View</button>
-                                <button class="btn btn-sm">Delete</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="file-item uploaded">
-                        <div class="file-icon"><i class="bi bi-file-earmark-pdf"></i></div>
-                        <div class="file-info">
-                            <h4>process_documentation.pdf</h4>
-                            <p>PDF • 3.2 MB • Uploaded 3 hours ago</p>
-                        </div>
-                        <div class="file-status">
-                            <span class="status-badge success">✅ Analyzed</span>
-                            <div class="file-actions">
-                                <button class="btn btn-sm">View</button>
-                                <button class="btn btn-sm">Delete</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="file-item uploading">
-                        <div class="file-icon"><i class="bi bi-file-earmark-music"></i></div>
-                        <div class="file-info">
-                            <h4>call_recording_001.mp3</h4>
-                            <p>Audio • 45 MB • Uploading...</p>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 67%"></div>
-                            </div>
-                        </div>
-                        <div class="file-status">
-                            <span class="status-badge warning">🔄 67%</span>
-                            <div class="file-actions">
-                                <button class="btn btn-sm">Cancel</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="file-item pending">
-                        <div class="file-icon"><i class="bi bi-pencil-square"></i></div>
-                        <div class="file-info">
-                            <h4>call_transcription_001.txt</h4>
-                            <p>Text • 128 KB • Uploaded 1 hour ago</p>
-                        </div>
-                        <div class="file-status">
-                            <span class="status-badge info">⏳ Pending</span>
-                            <div class="file-actions">
-                                <button class="btn btn-sm">Analyze</button>
-                                <button class="btn btn-sm">Delete</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="file-item error">
-                        <div class="file-icon"><i class="bi bi-file-earmark-pdf"></i></div>
-                        <div class="file-info">
-                            <h4>incomplete_document.pdf</h4>
-                            <p>PDF • 1.8 MB • Uploaded 5 hours ago</p>
-                        </div>
-                        <div class="file-status">
-                            <span class="status-badge error">❌ Missing Info</span>
-                            <div class="file-actions">
-                                <button class="btn btn-sm">Fix</button>
-                                <button class="btn btn-sm">Delete</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="file-item uploaded">
-                        <div class="file-icon"><i class="bi bi-camera-video"></i></div>
-                        <div class="file-info">
-                            <h4>onboarding_process.mp4</h4>
-                            <p>Video • 210 MB • Uploaded yesterday</p>
-                        </div>
-                        <div class="file-status">
-                            <span class="status-badge success">✅ Analyzed</span>
-                            <div class="file-actions">
-                                <button class="btn btn-sm">View</button>
-                                <button class="btn btn-sm">Delete</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div class="files-list" id="artifactsList">
+                    <!-- Populated dynamically from API via upload-api.js -->
             </section>
 
             <!-- Storage Info -->
@@ -234,5 +151,11 @@
 
     <script src="script.js"></script>
     <script src="bpo-platform.js"></script>
+    <!-- Phase 3: API integration -->
+    <script src="js/app-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api-client.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/upload-api.js"></script>
 </body>
 </html>

@@ -105,11 +105,78 @@ The wireframe uses a grayscale palette. To add colors:
 - Feature boxes use responsive grid: `.feature-boxes`
 - Footer uses auto-fit columns: `.footer-content`
 
-## Development
+## .NET + Azure Platform Development
 
-No build process required! This is a pure HTML/CSS/JavaScript wireframe.
+This repository also contains a full-stack BPO AI Platform built with .NET 8 and Azure services.
+Open `BPOPlatform.sln` (at the repository root) in Visual Studio 2022 or Rider to load all projects.
 
-Simply edit the files and refresh your browser to see changes.
+### Solution Projects
+
+| Project | Type | Purpose |
+|---------|------|---------|
+| **`src/BPOPlatform.Web`** | ASP.NET Core (static files) | **Web startup** – serves the HTML/CSS/JS frontend locally |
+| **`src/BPOPlatform.Api`** | ASP.NET Core Web API | **API startup** – REST API + SignalR hub (Swagger at `/swagger`) |
+| `src/BPOPlatform.Functions` | Azure Functions v4 | Background blob-trigger AI processing |
+| `src/BPOPlatform.Application` | Class Library | CQRS handlers, validators, DTOs |
+| `src/BPOPlatform.Infrastructure` | Class Library | EF Core, Azure Blob, Azure OpenAI |
+| `src/BPOPlatform.Domain` | Class Library | Entities, domain events, interfaces |
+| `src/BPOPlatform.UnitTests` | xUnit | 59 unit tests |
+| `src/BPOPlatform.IntegrationTests` | xUnit | 20 integration tests |
+
+### Running Locally
+
+#### Visual Studio 2022
+
+1. Open `BPOPlatform.sln`
+2. Right-click the solution → **Properties** → **Startup Project**
+3. Select **Multiple startup projects** and set:
+   - `BPOPlatform.Web` → **Start**
+   - `BPOPlatform.Api` → **Start**
+   - All other projects → *None*
+4. Press **F5**
+
+| URL | What opens |
+|-----|-----------|
+| `http://localhost:5500` | HTML frontend (index, dashboard, kanban …) |
+| `http://localhost:5232/swagger` | REST API + Swagger UI |
+
+#### VS Code
+
+A compound launch configuration is included. Open the Run panel and select:
+
+> **🚀 Full Platform (Web + API)**
+
+This starts both projects simultaneously and opens the browser.
+
+#### Command Line
+
+```bash
+# Terminal 1 – API
+cd src/BPOPlatform.Api
+dotnet run
+
+# Terminal 2 – Web frontend
+cd src/BPOPlatform.Web
+dotnet run
+```
+
+### Running Tests
+
+```bash
+dotnet test BPOPlatform.sln
+```
+
+79 tests (59 unit + 20 integration) should all pass.
+
+---
+
+## Development (Static HTML)
+
+The frontend is pure HTML/CSS/JavaScript — no build process required.
+
+Edit any `.html`, `.css`, or `.js` file and refresh the browser to see changes instantly.
+The `BPOPlatform.Web` project (above) serves these files when running the full .NET platform,
+but you can also open `index.html` directly in a browser for quick static prototyping.
 
 ## License
 

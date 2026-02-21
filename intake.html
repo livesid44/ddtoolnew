@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="BPO Process Discovery Platform - Process Intake">
+    <title>Intake – BPO AI Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="bpo-platform.css">
+    <link rel="stylesheet" href="bootstrap-icons.css">
+    <link rel="stylesheet" href="professional-enhancements.css">
+    <!-- MSAL.js for Azure AD authentication -->
+    <script src="https://alcdn.msauth.net/browser/3.27.0/js/msal-browser.min.js" defer></script>
+    <!-- SignalR client for real-time notifications -->
+    <script src="https://cdn.jsdelivr.net/npm/@microsoft/signalr@8.0.7/dist/browser/signalr.min.js" defer></script>
+    <style>
+        /* ── Utility classes (platform-wide) ─────────────────── */
+        .intake-content-card {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .intake-content-card h2 {
+            font-size: 1.1rem;
+            color: #333;
+            margin: 0 0 0.25rem;
+        }
+        .intake-muted {
+            color: #666;
+            font-size: 0.85rem;
+            margin: 0 0 1rem;
+        }
+        .btn-outline {
+            background: #fff;
+            color: #e31837;
+            border: 2px solid #e31837;
+        }
+        .btn-outline:hover {
+            background: #fff5f7;
+        }
+        .btn-success {
+            background: #22c55e;
+            border-color: #22c55e;
+            color: #fff;
+        }
+        .btn-success:hover { background: #16a34a; border-color: #16a34a; }
+
+        /* ── Stepper ─────────────────────────────────────────── */
+        .intake-stepper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            margin-bottom: 2rem;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.25rem 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .step-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            min-width: 110px;
+        }
+        .step-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            background: #e5e7eb;
+            color: #9ca3af;
+            border: 2px solid #e5e7eb;
+            transition: all 0.3s;
+        }
+        .step-circle.active  { background: #e31837; color: #fff; border-color: #e31837; }
+        .step-circle.done    { background: #22c55e; color: #fff; border-color: #22c55e; }
+        .step-label {
+            font-size: 11px;
+            color: #9ca3af;
+            text-align: center;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .step-label.active { color: #e31837; font-weight: 700; }
+        .step-label.done   { color: #22c55e; }
+        .step-connector {
+            flex: 1;
+            height: 2px;
+            background: #e5e7eb;
+            margin-bottom: 22px;
+            transition: background 0.3s;
+            max-width: 80px;
+        }
+        .step-connector.done { background: #22c55e; }
+
+        /* ── Chat window ─────────────────────────────────────── */
+        .chat-window {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            height: 360px;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .chat-bubble {
+            max-width: 78%;
+            padding: 10px 14px;
+            border-radius: 16px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        .chat-bubble.assistant {
+            background: #e31837;
+            color: #fff;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+        .chat-bubble.user {
+            background: #f0f0f0;
+            color: #333;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+        .chat-bubble.typing {
+            background: #e5e7eb;
+            color: #6b7280;
+            align-self: flex-start;
+        }
+        .chat-input-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .chat-input-row input {
+            flex: 1;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 0.5rem 0.875rem;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .chat-input-row input:focus { border-color: #e31837; }
+        .chat-input-row input:disabled { background: #f5f5f5; color: #aaa; }
+
+        /* ── Meta preview grid ───────────────────────────────── */
+        .meta-field-item {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 0.625rem 0.875rem;
+        }
+        .meta-field-label {
+            font-size: 10px;
+            color: #9ca3af;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+        .meta-field-value {
+            font-size: 13px;
+            color: #1e293b;
+            font-weight: 500;
+        }
+
+        /* ── Upload drop zone ────────────────────────────────── */
+        .drop-zone {
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #fafafa;
+        }
+        .drop-zone:hover, .drop-zone.over {
+            border-color: #e31837;
+            background: #fff5f7;
+        }
+        .drop-zone .drop-icon { font-size: 40px; margin-bottom: 8px; }
+        .uploaded-files { margin-top: 16px; display: flex; flex-direction: column; gap: 8px; }
+        .uploaded-file {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 13px;
+        }
+        .uploaded-file .file-icon { font-size: 18px; }
+        .uploaded-file .file-name { flex: 1; font-weight: 500; color: #1e293b; }
+        .uploaded-file .file-size { color: #94a3b8; font-size: 11px; }
+
+        /* ── Analysis cards ──────────────────────────────────── */
+        .analysis-brief {
+            background: #fff5f7;
+            border: 1px solid #fecdd3;
+            border-left: 4px solid #e31837;
+            border-radius: 6px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1.25rem;
+            font-size: 14px;
+            line-height: 1.7;
+            color: #333;
+        }
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        @media (max-width: 768px) { .analysis-grid { grid-template-columns: 1fr; } }
+        .analysis-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #fff;
+        }
+        .analysis-card-header {
+            padding: 10px 16px;
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .analysis-card-header.checkpoints { background: #fef9c3; color: #92400e; }
+        .analysis-card-header.actionables  { background: #dcfce7; color: #14532d; }
+        .analysis-card-body { padding: 12px 16px; }
+        .analysis-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 6px 0;
+            border-bottom: 1px solid #f3f4f6;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #333;
+        }
+        .analysis-item:last-child { border-bottom: none; }
+        .analysis-item .icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+
+        /* ── Promote banner ──────────────────────────────────── */
+        .promote-banner {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            border-radius: 8px;
+            padding: 2rem;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .promote-banner h3 { margin: 0 0 8px; font-size: 1.25rem; }
+        .promote-banner p  { margin: 0 0 1.25rem; opacity: 0.9; }
+
+        /* ── Step action bar ─────────────────────────────────── */
+        .step-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.5rem;
+        }
+        .step-actions-right { display: flex; gap: 0.5rem; }
+    </style>
+</head>
+<body class="intake-page">
+
+<!-- ── Header ─────────────────────────────────────────────────────────────── -->
+<header class="platform-header">
+    <div class="header-container">
+        <div class="logo">
+            <img src="images/aura.png" alt="AURA" style="height:35px;width:auto;">
+        </div>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="dashboard.html">Home</a></li>
+                <li><a href="workflow.html">Workflow</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="admin.html">Admin</a></li>
+                <li><a href="#settings">Settings</a></li>
+            </ul>
+        </nav>
+        <div class="user-menu">
+            <span class="user-name" id="userName">Loading…</span>
+            <button onclick="location.href='login.html'" class="btn btn-sm" style="background:#e31837;border-color:#e31837;">Logout</button>
+        </div>
+    </div>
+</header>
+
+<div class="platform-layout">
+
+    <!-- ── Sidebar ──────────────────────────────────────────────────────────── -->
+    <aside class="platform-sidebar" id="platformSidebar">
+        <div class="sidebar-toggle" onclick="document.getElementById('platformSidebar').classList.toggle('active')" style="cursor:pointer;padding:10px 15px;color:#fff;text-align:center;">
+            <span style="font-size:1.5rem;"><i class="bi bi-list"></i></span>
+        </div>
+        <h3>Quick Links</h3>
+        <nav class="sidebar-nav">
+            <a href="workflow.html" class="sidebar-link">
+                <span class="icon"><i class="bi bi-diagram-3"></i></span>
+                <span>Workflow Engine</span>
+            </a>
+            <a href="intake.html" class="sidebar-link active">
+                <span class="icon"><i class="bi bi-inbox-fill"></i></span>
+                <span>Intake</span>
+            </a>
+            <a href="upload.html" class="sidebar-link">
+                <span class="icon"><i class="bi bi-cloud-upload"></i></span>
+                <span>Upload Files</span>
+            </a>
+            <a href="analysis.html" class="sidebar-link">
+                <span class="icon"><i class="bi bi-cpu"></i></span>
+                <span>AI Analysis</span>
+            </a>
+            <a href="kanban.html" class="sidebar-link">
+                <span class="icon"><i class="bi bi-kanban"></i></span>
+                <span>Kanban Board</span>
+            </a>
+            <a href="admin.html" class="sidebar-link">
+                <span class="icon"><i class="bi bi-gear"></i></span>
+                <span>Admin Config</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- ── Main Content ──────────────────────────────────────────────────────── -->
+    <main class="platform-main">
+
+        <div class="page-header">
+            <h1>Process Intake</h1>
+            <p>Submit a new process for discovery and AI-powered analysis</p>
+        </div>
+
+        <!-- ── Stepper ──────────────────────────────────────────────────────── -->
+        <div class="intake-stepper" id="intakeStepper">
+            <div class="step-item">
+                <div class="step-circle active" id="step1Circle">1</div>
+                <div class="step-label active" id="step1Label">Meta Info</div>
+            </div>
+            <div class="step-connector" id="conn1"></div>
+            <div class="step-item">
+                <div class="step-circle" id="step2Circle">2</div>
+                <div class="step-label" id="step2Label">Upload Files</div>
+            </div>
+            <div class="step-connector" id="conn2"></div>
+            <div class="step-item">
+                <div class="step-circle" id="step3Circle">3</div>
+                <div class="step-label" id="step3Label">AI Analysis</div>
+            </div>
+            <div class="step-connector" id="conn3"></div>
+            <div class="step-item">
+                <div class="step-circle" id="step4Circle">4</div>
+                <div class="step-label" id="step4Label">Create Project</div>
+            </div>
+        </div>
+
+        <!-- ── STEP 1: Chat ──────────────────────────────────────────────────── -->
+        <div id="panelStep1">
+
+            <div class="intake-content-card">
+                <h2>📝 Tell us about your process</h2>
+                <p class="intake-muted">Answer the AI assistant's questions to describe the process you want to submit.</p>
+                <div class="chat-window" id="chatWindow"></div>
+                <div class="chat-input-row">
+                    <input type="text" id="chatInput" placeholder="Type your answer and press Enter…" autocomplete="off">
+                    <button class="btn" id="chatSend" onclick="intakeSendChat()">Send</button>
+                </div>
+            </div>
+
+            <!-- Collected fields preview -->
+            <div class="intake-content-card" id="metaPreviewCard" style="display:none;">
+                <h2>📋 Collected Information</h2>
+                <p class="intake-muted">Review the details below. Edit if needed, then submit to continue.</p>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" id="metaFields"></div>
+                <div class="step-actions" style="margin-top:1rem;">
+                    <button class="btn btn-outline" onclick="intakeEditMeta()">✏️ Edit</button>
+                    <button class="btn" id="btnSubmitMeta" onclick="intakeSubmitMeta()">Submit &amp; Continue →</button>
+                </div>
+            </div>
+
+        </div><!-- /panelStep1 -->
+
+        <!-- ── STEP 2: Upload ────────────────────────────────────────────────── -->
+        <div id="panelStep2" style="display:none;">
+
+            <div class="intake-content-card">
+                <h2>📎 Upload Supporting Documents</h2>
+                <p class="intake-muted">Upload PDFs, Word docs, videos, audio recordings, or transcripts for AI analysis.</p>
+                <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+                    <div class="drop-icon">📂</div>
+                    <p style="margin:0;font-weight:600;color:#374151;">Click to browse or drag files here</p>
+                    <p style="margin:4px 0 0;font-size:12px;color:#9ca3af;">PDF, DOCX, MP4, MP3, WAV, TXT — up to 200 MB each</p>
+                </div>
+                <input type="file" id="fileInput" multiple hidden
+                       accept=".pdf,.docx,.txt,.mp4,.avi,.mp3,.wav,.m4a,.ogg,.xlsx,.csv"
+                       onchange="intakeFilePicked(this.files)">
+                <div class="uploaded-files" id="uploadedFilesList"></div>
+            </div>
+
+            <div class="step-actions">
+                <button class="btn btn-outline" onclick="intakeGoToStep(1)">← Back</button>
+                <button class="btn" id="btnNextToAnalysis" onclick="intakeGoToStep(3)">Continue to Analysis →</button>
+            </div>
+
+        </div><!-- /panelStep2 -->
+
+        <!-- ── STEP 3: Analysis ──────────────────────────────────────────────── -->
+        <div id="panelStep3" style="display:none;">
+
+            <!-- Loading card -->
+            <div class="intake-content-card" id="analysisLoadingCard" style="text-align:center;padding:3rem 1.5rem;">
+                <div style="font-size:48px;margin-bottom:1rem;">🤖</div>
+                <h3 style="margin:0 0 0.5rem;color:#333;">Running AI Analysis…</h3>
+                <p class="intake-muted" style="margin-bottom:1rem;">Analysing your documents and process description. This may take a moment.</p>
+                <div class="progress-bar"><div class="progress-fill" id="analysisProgress" style="width:0%;"></div></div>
+            </div>
+
+            <!-- Results -->
+            <div id="analysisResultsPanel" style="display:none;">
+                <div class="analysis-brief" id="analysisBrief"></div>
+                <div class="analysis-grid">
+                    <div class="analysis-card">
+                        <div class="analysis-card-header checkpoints">✅ Key Checkpoints</div>
+                        <div class="analysis-card-body" id="checkpointsList"></div>
+                    </div>
+                    <div class="analysis-card">
+                        <div class="analysis-card-header actionables">🎯 Actionables</div>
+                        <div class="analysis-card-body" id="actionablesList"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-actions" style="margin-top:1rem;">
+                <button class="btn btn-outline" onclick="intakeGoToStep(2)">← Back</button>
+                <button class="btn" id="btnRunAnalysis" onclick="intakeRunAnalysis()">🤖 Run AI Analysis</button>
+            </div>
+
+        </div><!-- /panelStep3 -->
+
+        <!-- ── STEP 4: Promote ───────────────────────────────────────────────── -->
+        <div id="panelStep4" style="display:none;">
+
+            <div class="promote-banner" id="promoteBanner">
+                <div style="font-size:48px;margin-bottom:0.75rem;">🚀</div>
+                <h3>Ready to create your project!</h3>
+                <p>Your intake has been analysed. Click below to create a full project in the platform.</p>
+                <button class="btn" style="background:#fff;color:#16a34a;border-color:#fff;font-weight:700;" onclick="intakePromote()">Create Project →</button>
+            </div>
+
+            <!-- Success card -->
+            <div id="promoteSuccess" style="display:none;" class="intake-content-card" style="text-align:center;">
+                <div style="text-align:center;padding:1.5rem 1rem;">
+                    <div style="font-size:48px;margin-bottom:0.75rem;">🎉</div>
+                    <h3 style="margin:0 0 0.5rem;color:#22c55e;">Project Created!</h3>
+                    <p class="intake-muted" id="promoteSuccessMsg"></p>
+                    <div style="margin-top:1rem;display:flex;justify-content:center;flex-wrap:wrap;gap:0.5rem;">
+                        <a href="workflow.html" class="btn">View in Workflow</a>
+                        <a href="kanban.html" class="btn btn-outline">Open Kanban Board</a>
+                        <button class="btn btn-outline" onclick="intakeStartNew()">Start New Intake</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-actions" id="step4BackRow">
+                <button class="btn btn-outline" onclick="intakeGoToStep(3)">← Back</button>
+                <span></span>
+            </div>
+
+        </div><!-- /panelStep4 -->
+
+    </main><!-- /platform-main -->
+
+</div><!-- /platform-layout -->
+
+<!-- Scripts -->
+<script src="js/app-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/api-client.js"></script>
+<script src="js/notifications.js"></script>
+<script src="js/intake-api.js"></script>
+</body>
+</html>

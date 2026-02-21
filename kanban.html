@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="bpo-platform.css">
     <link rel="stylesheet" href="bootstrap-icons.css">
     <link rel="stylesheet" href="professional-enhancements.css">
+    <script src="https://alcdn.msauth.net/browser/3.27.0/js/msal-browser.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@microsoft/signalr@8.0.7/dist/browser/signalr.min.js" defer></script>
 </head>
 <body class="kanban-page">
     <!-- Header with Navigation -->
@@ -42,6 +44,10 @@
                     <span class="icon"><i class="bi bi-diagram-3"></i></span>
                     <span>Workflow Engine</span>
                 </a>
+                <a href="intake.html" class="sidebar-link">
+                    <span class="icon"><i class="bi bi-inbox-fill"></i></span>
+                    <span>Intake</span>
+                </a>
                 <a href="upload.html" class="sidebar-link">
                     <span class="icon"><i class="bi bi-cloud-upload"></i></span>
                     <span>Upload Files</span>
@@ -72,7 +78,7 @@
                         <option>HR Processes</option>
                         <option>Finance Workflows</option>
                     </select>
-                    <button class="btn btn-primary">+ Add Task</button>
+                    <button class="btn btn-primary" data-action="add-task">+ Add Task</button>
                 </div>
             </div>
 
@@ -499,11 +505,11 @@
             <section class="board-stats">
                 <div class="stat-card">
                     <h4>Total Tasks</h4>
-                    <div class="stat-value">18</div>
+                    <div class="stat-value" id="stat-total-tasks">--</div>
                 </div>
                 <div class="stat-card">
                     <h4>Completion Rate</h4>
-                    <div class="stat-value">33%</div>
+                    <div class="stat-value" id="stat-completion-rate">--</div>
                 </div>
                 <div class="stat-card">
                     <h4>Avg. Time in Progress</h4>
@@ -511,7 +517,7 @@
                 </div>
                 <div class="stat-card">
                     <h4>High Priority</h4>
-                    <div class="stat-value">7 tasks</div>
+                    <div class="stat-value" id="stat-high-priority">--</div>
                 </div>
             </section>
         </main>
@@ -519,5 +525,11 @@
 
     <script src="script.js"></script>
     <script src="bpo-platform.js"></script>
+    <!-- Phase 3: API integration -->
+    <script src="js/app-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api-client.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/kanban-api.js"></script>
 </body>
 </html>
