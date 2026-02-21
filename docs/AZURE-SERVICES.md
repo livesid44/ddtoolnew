@@ -148,10 +148,33 @@
 | **Model deployed** | `gpt-4o` (`2024-08-06`), Standard SKU, 10K TPM capacity |
 | **SDK / package** | `Azure.AI.OpenAI` 2.1 |
 | **`appsettings` key** | `AzureOpenAI:Endpoint`, `AzureOpenAI:DeploymentName` |
-| **Used for** | Process analysis (automation / compliance scoring + insights), AI-generated process documentation (Markdown / HTML / DOCX) |
 | **Managed Identity role** | `Cognitive Services OpenAI User` → API App + Functions App |
-| **Dev fallback** | `MockAiAnalysisService` (returns representative hardcoded scores) + `MarkdownDocumentGenerationService` (template-based) |
+| **Dev fallback** | `MockAiAnalysisService` (hardcoded scores) + `MarkdownDocumentGenerationService` (template-based) + `MockIntakeChatService` (guided chat) |
 | **Regions** | Not available in all regions — check [availability](https://learn.microsoft.com/azure/ai-services/openai/concepts/models#standard-models-by-endpoint) |
+
+#### Azure OpenAI API calls made by this platform
+
+The following table lists **every place** the platform calls Azure OpenAI, the system prompt type, and the estimated token budget per call:
+
+| Feature | File | API endpoint | System prompt type | Est. tokens / call |
+|---------|------|-------------|-------------------|-------------------|
+| **Process AI Analysis** (automation + compliance scoring) | `AzureOpenAiAnalysisService.cs` | `chat/completions` | JSON structured output — scores 0–100 + insights array | ~1 000 in / 500 out |
+| **Process Document Generation** (Markdown / HTML / DOCX report) | `OpenAiDocumentGenerationService.cs` | `chat/completions` | Long-form report generation from process metadata | ~800 in / 2 000 out |
+| **Intake Guided Chat** (meta-field collection) | `AzureIntakeChatService.SendMessageAsync` | `chat/completions` | Step-by-step field extraction; returns JSON + assistant message | ~600 in / 300 out per turn |
+| **Intake AI Analysis** (brief + checkpoints + actionables) | `AzureIntakeChatService.AnalyseIntakeAsync` | `chat/completions` | Structured JSON: brief string + checkpoints array + actionables array | ~1 200 in / 800 out |
+
+> **One deployment is sufficient** — all four features share the single `gpt-4o` deployment configured in `AzureOpenAI:DeploymentName`. No separate deployments are needed per feature.
+
+#### Minimum required Azure OpenAI setup
+
+```
+1. Create Azure OpenAI resource  (portal → AI Services → Azure OpenAI)
+2. Deploy model:  gpt-4o  (2024-08-06),  Standard,  ≥ 10K TPM
+3. Copy Endpoint URL  →  appsettings.json  AzureOpenAI:Endpoint
+4. Assign role:  Cognitive Services OpenAI User  →  API App managed identity
+```
+
+No Azure OpenAI API key is needed in production — Managed Identity handles authentication. In local development, the platform automatically falls back to mock services so **no Azure OpenAI account is required to run locally**.
 
 ---
 
@@ -378,7 +401,7 @@ No Azure subscription is required to run the platform locally. All Azure service
 |---------------|---------------|-----------------|
 | Azure SQL | **SQLite** (`bpo-platform-dev.db`) | Set `ConnectionStrings:DefaultConnection` to `DataSource=bpo-platform-dev.db` in `appsettings.Development.json` |
 | Azure Blob Storage | **LocalBlobStorageService** (OS temp dir) or **Azurite** | Leave `AzureStorage:ServiceUri` blank, or set `ConnectionStrings:BlobStorage` to Azurite connection string |
-| Azure OpenAI | **MockAiAnalysisService** (hardcoded scores) | Leave `AzureOpenAI:Endpoint` blank or set to placeholder |
+| Azure OpenAI | **MockAiAnalysisService** (hardcoded scores) + **MockIntakeChatService** (guided chat) + **MarkdownDocumentGenerationService** (template doc) | Leave `AzureOpenAI:Endpoint` blank or set to placeholder |
 | Document Intelligence | **MockDocumentIntelligenceService** | Leave `DocumentIntelligence:Endpoint` blank |
 | Speech Services | **MockSpeechTranscriptionService** | Leave `SpeechServices:SubscriptionKey` blank |
 | Document Generation | **MarkdownDocumentGenerationService** (template) | Automatic when OpenAI not configured |

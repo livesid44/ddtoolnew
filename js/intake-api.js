@@ -128,9 +128,9 @@ function intakeRenderMetaPreview() {
     container.innerHTML = entries
         .filter(([, v]) => v)
         .map(([k, v]) => `
-            <div style="background:#f8fafc;border-radius:8px;padding:10px 14px;">
-                <div style="font-size:11px;color:#9ca3af;font-weight:600;text-transform:uppercase;margin-bottom:2px;">${k}</div>
-                <div style="font-size:14px;color:#1e293b;font-weight:500;">${v}</div>
+            <div class="meta-field-item">
+                <div class="meta-field-label">${k}</div>
+                <div class="meta-field-value">${escHtml(v)}</div>
             </div>`)
         .join('');
 }
